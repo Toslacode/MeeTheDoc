@@ -41,7 +41,7 @@ function SlotPicker({
       {groups.map((group, groupIndex) => (
         <section
           key={group.date}
-          className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-4 sm:p-5"
+          className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-5 sm:p-6"
           style={{ animationDelay: `${groupIndex * 80}ms` }}
         >
           <h2 className="text-foreground mb-3.5 flex items-center gap-2 text-base font-bold">

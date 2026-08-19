@@ -121,7 +121,7 @@ export default function LoginPage() {
           </Button>
         </section>
 
-        <section className="border-border bg-secondary/55 animate-fade-in-up mt-4 flex items-center gap-3 rounded-xl border p-4 [animation-delay:260ms]">
+        <section className="border-border bg-secondary/55 animate-fade-in-up mt-6 flex items-center gap-3 rounded-xl border p-4 [animation-delay:260ms]">
           <span className="bg-card text-primary flex size-11 shrink-0 items-center justify-center rounded-full">
             <Users className="size-5" aria-hidden />
           </span>

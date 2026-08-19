@@ -60,7 +60,7 @@ export default function DoctorProfilePage() {
         <h1 className="text-foreground mt-4 text-2xl font-extrabold tracking-tight">
           {doctor?.name ?? " "}
         </h1>
-        <p className="text-muted-foreground mt-0.5 text-sm">
+        <p className="text-muted-foreground mt-1.5 text-sm">
           {doctor?.specialty}
           {department ? ` · ${department.name}` : ""}
         </p>

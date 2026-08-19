@@ -53,7 +53,7 @@ function CallCard({
     <article
       style={{ animationDelay: `${index * 60}ms` }}
       className={cn(
-        "border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-4",
+        "border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-4 sm:p-5",
         "transition-[box-shadow,transform,border-color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
         "hover:shadow-card-hover hover:border-primary/20 hover:-translate-y-0.5",
         isDone && "opacity-72"

@@ -142,100 +142,108 @@ export default function FamilyPage() {
 
   if (step === "success" && booking && selectedDoctor) {
     return (
-      <FamilyShell departmentName={departmentName} title="" >
-        <BookingSuccess booking={booking} doctor={selectedDoctor} onDone={restart} />
-      </FamilyShell>
+      <div key={step} className="animate-fade-in-up">
+        <FamilyShell departmentName={departmentName} title="">
+          <BookingSuccess booking={booking} doctor={selectedDoctor} onDone={restart} />
+        </FamilyShell>
+      </div>
     );
   }
 
   if (step === "details" && selectedDoctor && selectedSlot) {
     return (
-      <FamilyShell
-        departmentName={departmentName}
-        title="עוד כמה פרטים"
-        subtitle="הפרטים עוזרים לרופא להתכונן לשיחה מראש."
-      >
-        <BookingForm
-          doctor={selectedDoctor}
-          date={selectedSlot.date}
-          time={selectedSlot.startTime}
-          submitting={submitting}
-          onBack={() => setStep("slot")}
-          onSubmit={handleSubmit}
-        />
-      </FamilyShell>
+      <div key={step} className="animate-fade-in-up">
+        <FamilyShell
+          departmentName={departmentName}
+          title="עוד כמה פרטים"
+          subtitle="הפרטים עוזרים לרופא להתכונן לשיחה מראש."
+        >
+          <BookingForm
+            doctor={selectedDoctor}
+            date={selectedSlot.date}
+            time={selectedSlot.startTime}
+            submitting={submitting}
+            onBack={() => setStep("slot")}
+            onSubmit={handleSubmit}
+          />
+        </FamilyShell>
+      </div>
     );
   }
 
   if (step === "slot" && selectedDoctor) {
     return (
-      <FamilyShell
-        departmentName={departmentName}
-        title="מתי נוח לכם לדבר?"
-        subtitle="מוצגים רק הזמנים שהרופא הגדיר כפנויים"
-      >
-        <p className="text-foreground mb-4 text-center text-base font-bold">
-          {selectedDoctor.name}
-        </p>
-
-        {submitError ? (
-          <p
-            role="alert"
-            className="border-destructive/25 bg-destructive/8 text-destructive mb-4 rounded-lg border px-4 py-3 text-sm font-medium"
-          >
-            {submitError}
+      <div key={step} className="animate-fade-in-up">
+        <FamilyShell
+          departmentName={departmentName}
+          title="מתי נוח לכם לדבר?"
+          subtitle="מוצגים רק הזמנים שהרופא הגדיר כפנויים"
+        >
+          <p className="text-foreground mb-4 text-center text-base font-bold">
+            {selectedDoctor.name}
           </p>
-        ) : null}
 
-        <SlotPicker
-          slots={slots}
-          selectedSlotId={selectedSlotId}
-          onSelect={handleSelectSlot}
-        />
+          {submitError ? (
+            <p
+              role="alert"
+              className="border-destructive/25 bg-destructive/8 text-destructive mb-4 rounded-lg border px-4 py-3 text-sm font-medium"
+            >
+              {submitError}
+            </p>
+          ) : null}
 
-        <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-between">
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setSelectedDoctorId(null);
-              setStep("doctor");
-            }}
-          >
-            <ChevronRight className="rtl:-scale-x-100" aria-hidden />
-            חזרה לבחירת רופא
-          </Button>
+          <SlotPicker
+            slots={slots}
+            selectedSlotId={selectedSlotId}
+            onSelect={handleSelectSlot}
+          />
 
-          <Button
-            disabled={!selectedSlotId}
-            onClick={() => setStep("details")}
-            className="sm:min-w-44"
-          >
-            המשך
-          </Button>
-        </div>
-      </FamilyShell>
+          <div className="mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-between">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setSelectedDoctorId(null);
+                setStep("doctor");
+              }}
+            >
+              <ChevronRight className="rtl:-scale-x-100" aria-hidden />
+              חזרה לבחירת רופא
+            </Button>
+
+            <Button
+              disabled={!selectedSlotId}
+              onClick={() => setStep("details")}
+              className="sm:min-w-44"
+            >
+              המשך
+            </Button>
+          </div>
+        </FamilyShell>
+      </div>
     );
   }
 
   return (
-    <FamilyShell
-      departmentName={departmentName}
-      title="קביעת שיחה עם רופא המחלקה"
-      subtitle="בחרו את הרופא שאיתו תרצו לקבוע שיחה"
-    >
-      <div className="flex flex-col gap-3">
-        {doctors === null
-          ? [0, 1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)
-          : doctors.map((doctor, index) => (
-              <DoctorCard
-                key={doctor.id}
-                doctor={doctor}
-                availableCount={slotCounts[doctor.id] ?? 0}
-                onSelect={() => handleSelectDoctor(doctor.id)}
-                index={index}
-              />
-            ))}
-      </div>
-    </FamilyShell>
+    <div key={step} className="animate-fade-in-up">
+      <FamilyShell
+        departmentName={departmentName}
+        title="קביעת שיחה עם רופא המחלקה"
+        subtitle="בחרו את הרופא שאיתו תרצו לקבוע שיחה"
+      >
+        <div className="flex flex-col gap-3">
+          {doctors === null
+            ? [0, 1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-xl" />)
+            : doctors.map((doctor, index) => (
+                <DoctorCard
+                  key={doctor.id}
+                  doctor={doctor}
+                  availableCount={slotCounts[doctor.id] ?? 0}
+                  onSelect={() => handleSelectDoctor(doctor.id)}
+                  index={index}
+                />
+              ))}
+        </div>
+      </FamilyShell>
+    </div>
   );
 }

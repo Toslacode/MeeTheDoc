@@ -103,7 +103,7 @@ function BookingForm({
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
       <BookingSummary doctor={doctor} date={date} time={time} />
 
-      <section className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-4 sm:p-5">
+      <section className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-5 sm:p-6">
         <h2 className="text-foreground mb-4 text-base font-bold">פרטי הבקשה</h2>
 
         <div className="flex flex-col gap-4">
@@ -179,7 +179,7 @@ function BookingForm({
         </div>
       </section>
 
-      <fieldset className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-4 sm:p-5 [animation-delay:70ms]">
+      <fieldset className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-5 sm:p-6 [animation-delay:70ms]">
         <legend className="text-foreground px-1 text-base font-bold">סוג השיחה</legend>
         <div className="mt-3 grid grid-cols-3 gap-2.5">
           {MEETING_TYPES.map((option) => (
@@ -194,7 +194,7 @@ function BookingForm({
         </div>
       </fieldset>
 
-      <fieldset className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-4 sm:p-5 [animation-delay:140ms]">
+      <fieldset className="border-border bg-card shadow-card animate-fade-in-up rounded-xl border p-5 sm:p-6 [animation-delay:140ms]">
         <legend className="text-foreground px-1 text-base font-bold">
           על מה תרצו לדבר עם הרופא?
         </legend>

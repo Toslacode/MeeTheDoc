@@ -100,12 +100,12 @@ export default function DoctorCallsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 pt-7 sm:px-6 sm:pt-9">
-      <header className="mb-5">
+      <header className="mb-6">
         <p className="text-muted-foreground text-sm">{formatHebrewDate(today)}</p>
-        <h1 className="text-foreground mt-0.5 text-2xl font-extrabold sm:text-3xl">
+        <h1 className="text-foreground mt-1.5 text-2xl font-extrabold sm:text-3xl">
           השיחות שלי
         </h1>
-        <p className="text-muted-foreground mt-1.5 text-sm">
+        <p className="text-muted-foreground mt-2 text-sm">
           {doctor?.name}
           {todayScheduled.length > 0
             ? ` · ${todayScheduled.length} שיחות היום`
@@ -115,7 +115,7 @@ export default function DoctorCallsPage() {
 
       {!hasPublishedToday ? <ReminderBanner /> : null}
 
-      <div className="border-border bg-card shadow-card mb-5 grid grid-cols-3 rounded-xl border [&>*+*]:border-s [&>*+*]:border-border">
+      <div className="border-border bg-card shadow-card mb-4 grid grid-cols-3 rounded-xl border [&>*+*]:border-s [&>*+*]:border-border">
         <SummaryTile label="סה״כ היום" value={todayAll.length} icon={MessagesSquare} />
         <SummaryTile label="הושלמו" value={todayDone.length} icon={CalendarCheck2} />
         <SummaryTile label="נותרו" value={todayScheduled.length} icon={Clock3} />
@@ -134,7 +134,9 @@ export default function DoctorCallsPage() {
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              "min-h-10 rounded-md text-sm font-semibold transition-colors duration-150",
+              "min-h-10 rounded-md text-sm font-semibold",
+              "transition-[background-color,color,transform] duration-150 ease-out",
+              "active:scale-[0.97]",
               "outline-none focus-visible:ring-ring focus-visible:ring-[3px]",
               tab === t.id
                 ? "bg-secondary text-primary"
@@ -198,12 +200,12 @@ function SummaryTile({
   icon: typeof MessagesSquare;
 }) {
   return (
-    <div className="px-3.5 py-3">
+    <div className="px-4 py-4">
       <span className="text-muted-foreground flex items-center gap-1.5 text-xs font-semibold">
         <Icon className="size-3.5" aria-hidden />
         {label}
       </span>
-      <span className="text-foreground mt-1 block text-2xl font-extrabold tabular-nums">
+      <span className="text-foreground mt-1.5 block text-2xl font-extrabold tabular-nums">
         {value}
       </span>
     </div>

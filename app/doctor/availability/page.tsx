@@ -134,10 +134,10 @@ export default function DoctorAvailabilityPage() {
     <main className="mx-auto w-full max-w-2xl px-4 pt-7 sm:px-6 sm:pt-9">
       <header className="mb-5">
         <p className="text-muted-foreground text-sm">{formatHebrewDate(today)}</p>
-        <h1 className="text-foreground mt-0.5 text-2xl font-extrabold sm:text-3xl">
+        <h1 className="text-foreground mt-1.5 text-2xl font-extrabold sm:text-3xl">
           זמינות לשיחות משפחה
         </h1>
-        <p className="text-muted-foreground mt-1.5 text-sm">מתי אתה זמין היום?</p>
+        <p className="text-muted-foreground mt-2 text-sm">מתי אתה זמין היום?</p>
       </header>
 
       {published ? (
@@ -154,7 +154,7 @@ export default function DoctorAvailabilityPage() {
         </div>
       ) : null}
 
-      <section className="border-border bg-card shadow-card rounded-xl border p-4 sm:p-5">
+      <section className="border-border bg-card shadow-card rounded-xl border p-5 sm:p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-foreground flex items-center gap-2 text-base font-bold">
             <CalendarClock className="text-primary size-4.5" aria-hidden />
