@@ -3,56 +3,115 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * ─────────────────────────────────────────────────────────────────────────
+ * MeeTheDoc design tokens.
+ *
+ * Light theme is the shipped product (app/layout.tsx sets no theme toggle
+ * and no `dark` class). The `.dark` block below is kept coherent for
+ * possible future use but is not currently reachable from the UI.
+ *
+ * Values are plain hex/rgb rather than oklch so they trace 1:1 back to the
+ * brand spec they were extracted from (design/references/). Comments below
+ * each token name the source value where useful.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* 1rem base: --radius-md ≈ 12px (chips), --radius-xl = 20px (cards) */
+  --radius: 1rem;
+
+  --background: #f4f7fe;
+  --foreground: #12305f;
+
+  --card: #ffffff;
+  --card-foreground: #12305f;
+
+  --popover: #ffffff;
+  --popover-foreground: #12305f;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-active: #1e40af;
+  --primary-foreground: #ffffff;
+
+  /* Soft blue accent surface: info chips, selected-secondary states */
+  --secondary: #eaf1fe;
+  --secondary-foreground: #12305f;
+
+  --muted: #eaf1fe;
+  --muted-foreground: #5b6b85;
+
+  --accent: #eaf1fe;
+  --accent-foreground: #12305f;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  /* Status-badge only — never used as a primary interface/action color */
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+
+  --border: #e6eaf2;
+  --input: #e6eaf2;
+  /* Solid color: existing components (e.g. components/ui/button.tsx) apply
+     the ~50% alpha themselves via the `ring-ring/50` utility modifier, so
+     --ring must stay opaque or that opacity would be applied twice. */
+  --ring: #2563eb;
+
+  /* Source values for the shadow-card / shadow-card-hover utilities, wired
+     through @theme inline below. Named "elevation-*" (not "shadow-*") so
+     they don't collide with the Tailwind theme keys that reference them. */
+  --elevation-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+  --elevation-card-hover: 0 2px 4px rgba(16, 24, 40, 0.06), 0 12px 32px rgba(16, 24, 40, 0.1);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: #0b1220;
+  --foreground: #e7ecf7;
+
+  --card: #101a2e;
+  --card-foreground: #e7ecf7;
+
+  --popover: #101a2e;
+  --popover-foreground: #e7ecf7;
+
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-active: #2563eb;
+  --primary-foreground: #0b1220;
+
+  --secondary: #16233d;
+  --secondary-foreground: #e7ecf7;
+
+  --muted: #16233d;
+  --muted-foreground: #93a3c0;
+
+  --accent: #16233d;
+  --accent-foreground: #e7ecf7;
+
+  --destructive: #f87171;
+  --destructive-foreground: #1f0a0a;
+
+  --success: #22c55e;
+  --success-foreground: #06210f;
+
+  --border: rgb(255 255 255 / 0.08);
+  --input: rgb(255 255 255 / 0.12);
+  --ring: #3b82f6;
+
+  --elevation-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --elevation-card-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --font-sans: var(--font-heebo);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -60,6 +119,8 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -68,9 +129,51 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Tailwind picks these up as the `shadow-card` / `shadow-card-hover`
+     utilities (any --shadow-* theme key becomes a shadow-<key> utility). */
+  --shadow-card: var(--elevation-card);
+  --shadow-card-hover: var(--elevation-card-hover);
+
+  /* ── Motion vocabulary ──────────────────────────────────────────────
+     Fast, subtle, professional: 150–250ms, standard ease-out curve.
+     Exposed as `animate-*` utilities (tw-animate-css's --animate-*
+     namespace convention) so screens can write e.g.
+     className="animate-fade-in-up [animation-delay:80ms]" for staggering. */
+  --animate-fade-in-up: fade-in-up 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-success-check: success-check 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes success-check {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @layer base {
@@ -79,5 +182,23 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/*
+ * Accessibility requirement, not a nicety: this is a healthcare product.
+ * Collapses every CSS animation/transition (entrances, hover elevation,
+ * selected-slot transitions, the success check, dialog/sheet slide-ins,
+ * skeleton pulses) to effectively instant for anyone who has asked their
+ * OS for reduced motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # logs
 *.log
+
+# scratch output from one-off scripts (e.g. scripts/process-logo.mjs)
+/scripts/.out/

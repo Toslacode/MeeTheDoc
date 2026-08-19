@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * One-off asset-prep script: makes the approved MeeTheDoc brand mark
+ * One-off experiment: attempt to make the approved MeeTheDoc brand mark
  * (an opaque RGB PNG, colorType 2, with a near-white studio background)
- * usable on the app's light-blue background by producing an RGBA copy
- * with the background made transparent.
+ * usable on colored surfaces by producing an RGBA copy with the
+ * background made transparent.
  *
  * This does NOT redraw, recompose, or reinterpret the artwork in any way.
  * It only classifies existing pixels as background/foreground and adjusts
@@ -25,13 +25,27 @@
  *      doesn't leave an opaque white/light halo at the icon's silhouette.
  *   4. Re-encode as an RGBA PNG (colorType 6) with the same dimensions.
  *
+ * OUTCOME OF THIS EXPERIMENT (do not re-attempt without changing approach):
+ * verified with a Playwright screenshot of the output composited on the
+ * primary-blue and navy tokens, this technique leaves a visible light
+ * gray/white halo around the whole silhouette. The source artwork has a
+ * soft drop-shadow baked in under the speech bubble that fades gradually
+ * into the white studio background over a wide band of pixels — a plain
+ * color-distance threshold cannot cut a soft, wide gradient cleanly no
+ * matter how it's tuned; that needs real alpha matting (or a source layer
+ * with the shadow separated out), neither of which is available here.
+ * Per product decision, the shipped brand mark therefore keeps the
+ * ORIGINAL untouched asset (public/assets/branding/logo.png) and
+ * MeeTheDocLogo presents it inside a white rounded container instead of
+ * using this script's output. This script is kept for the record / in
+ * case a cleaner source (transparent or shadow-free) becomes available
+ * later. Its output is intentionally NOT written into public/assets/ —
+ * see OUTPUT below.
+ *
  * Usage: node scripts/process-logo.mjs
- * Verify the result visually before trusting it — see README note in
- * public/assets/branding/ and the implementer's report for the
- * Playwright screenshot check this script's output was judged against.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import zlib from "node:zlib";
@@ -45,14 +59,10 @@ const SOURCE = path.join(
   "branding",
   "אייקון.png"
 );
-const OUTPUT = path.join(
-  __dirname,
-  "..",
-  "public",
-  "assets",
-  "branding",
-  "logo.png"
-);
+// Deliberately NOT under public/assets/ — this output did not pass visual
+// QA (see the outcome note above) and must not be servable or importable
+// as if it were the shipped brand mark. Gitignored; regenerate on demand.
+const OUTPUT = path.join(__dirname, ".out", "logo-transparent-attempt.png");
 
 // Distance-to-white thresholds (Euclidean, per channel 0-255 space).
 // HARD_T: pixels this close to white are candidates for the flood fill.
@@ -332,6 +342,7 @@ function main() {
   );
 
   const out = encodePng(width, height, rgba);
+  mkdirSync(path.dirname(OUTPUT), { recursive: true });
   writeFileSync(OUTPUT, out);
 
   const total = width * height;
