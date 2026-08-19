@@ -19,7 +19,7 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Overlay
       className={cn(
-        "fixed inset-0 z-50 bg-[#0b1a36]/35 backdrop-blur-[2px]",
+        "fixed inset-0 z-50 bg-[#0b1a36]/35 backdrop-blur-[16px]",
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
         "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
         className
@@ -44,7 +44,11 @@ function DialogContent({
       <DialogPrimitive.Content
         dir="rtl"
         className={cn(
-          "bg-card fixed z-50 flex flex-col gap-4 shadow-card-hover",
+          // glass-surface here draws only the frame edge + top highlight —
+          // the fill stays the fully opaque bg-card so text readability
+          // inside the dialog is never affected, per the same contrast
+          // rule the primary buttons follow.
+          "glass-surface border border-[color:var(--glass-border)] bg-card fixed z-50 flex flex-col gap-4 shadow-card-hover",
           "inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-xl p-5 pb-7",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom",

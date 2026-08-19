@@ -40,8 +40,12 @@ function CallDetailsDialog({
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent>
         {booking ? (
+          // Staggered in, matching the choreography booking-success.tsx
+          // uses for its own "here's what happened" moment — previously
+          // this dialog was the one such surface with no internal motion
+          // at all, everything just appeared at once.
           <>
-            <div>
+            <div className="animate-fade-in-up">
               <DialogTitle className="text-foreground text-xl font-extrabold">
                 {familyLabel(booking.familyContactName)}
               </DialogTitle>
@@ -50,7 +54,7 @@ function CallDetailsDialog({
               </DialogDescription>
             </div>
 
-            <div className="border-border bg-background/60 rounded-lg border px-4 py-1">
+            <div className="border-border bg-background/60 animate-fade-in-up rounded-lg border px-4 py-1 [animation-delay:60ms]">
               <Row label="מטופל" value={booking.patientName} />
               <Row label="בן/בת משפחה" value={booking.familyContactName} />
               <Row label="טלפון" value={<span dir="ltr">{booking.phone}</span>} />
@@ -68,7 +72,7 @@ function CallDetailsDialog({
             </div>
 
             {booking.notes ? (
-              <div className="bg-secondary/60 border-primary/12 rounded-lg border px-4 py-3">
+              <div className="bg-secondary/60 border-primary/12 animate-fade-in-up rounded-lg border px-4 py-3 [animation-delay:120ms]">
                 <p className="text-muted-foreground mb-1 text-xs font-semibold">
                   מידע נוסף מהמשפחה
                 </p>
@@ -76,8 +80,8 @@ function CallDetailsDialog({
               </div>
             ) : null}
 
-            <div className="flex flex-col gap-2.5">
-              {booking.meetingType === "google_meet" ? (
+            <div className="animate-fade-in-up flex flex-col gap-2.5 [animation-delay:180ms]">
+              {booking.meetingType === "google_meet" && booking.status === "scheduled" ? (
                 <Button className="w-full">
                   <Video aria-hidden />
                   הצטרף לשיחה

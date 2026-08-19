@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
 
 import { BookingForm, type BookingFormSubmit } from "@/components/family/booking-form";
@@ -37,7 +37,7 @@ export default function FamilyPage() {
   // actual filtering stays in lib/store/api.ts.
   const storeState = useStoreState();
 
-  const [step, setStep] = useState<Step>("doctor");
+  const [step, setStepState] = useState<Step>("doctor");
   const [department, setDepartment] = useState<Department | null>(null);
   const [doctors, setDoctors] = useState<Doctor[] | null>(null);
   const [slotCounts, setSlotCounts] = useState<Record<string, number>>({});
@@ -47,6 +47,23 @@ export default function FamilyPage() {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // submittingRef mirrors `submitting`, and stepRef mirrors `step` —
+  // both kept in perfect sync with their state at the exact moment each
+  // changes (see setStep below), not via a useEffect. createBooking's own
+  // dispatch fires synchronously and can spin up a fresh instance of the
+  // slots-fetch effect below WHILE handleSubmit is still suspended on its
+  // own `await`; that new instance's `.then()` callback is a plain
+  // microtask that can resolve BEFORE React finishes the render + commit
+  // + passive-effects cycle a reactive `useEffect(() => ref.current =
+  // step, [step])` would need to catch up — a `.then()` callback reliably
+  // wins that race against a whole React update cycle. Only a ref written
+  // synchronously at the same call site as setStep closes the gap.
+  const submittingRef = useRef(false);
+  const stepRef = useRef<Step>(step);
+  const setStep = useCallback((next: Step) => {
+    stepRef.current = next;
+    setStepState(next);
+  }, []);
 
   // Doctor list + per-doctor available counts.
   useEffect(() => {
@@ -72,19 +89,48 @@ export default function FamilyPage() {
     };
   }, [storeState]);
 
-  // Selected doctor's published, unbooked slots.
+  // Selected doctor's published, unbooked slots — and, in the same pass,
+  // the recovery path for a slot that vanished out from under the family.
   useEffect(() => {
     // No doctor chosen yet: nothing to fetch. Stale slots are never
     // rendered, because the slot step only shows once a doctor is set.
     if (!selectedDoctorId) return;
     let active = true;
     void listPublishedSlots(selectedDoctorId).then((next) => {
-      if (active) setSlots(next);
+      if (!active) return;
+      setSlots(next);
+
+      // The doctor can unpublish a slot at any moment, including while the
+      // family already has it selected or is mid-way through the details
+      // form. This effect re-runs on every store change regardless of
+      // which step is showing, so if the family's selected slot just
+      // dropped out of the fresh list, recover immediately instead of
+      // leaving a stale id around: without this, the render guards below
+      // would fail their `selectedSlot` check and silently fall through
+      // to the doctor-list screen, discarding anything typed into the
+      // booking form.
+      //
+      // submittingRef guards against a specific false positive: OUR OWN
+      // successful booking also removes the slot from this same list (it's
+      // now booked, not just published-and-free), which would otherwise
+      // look identical to someone else taking it and wrongly bounce a
+      // successful submission back to the slot step. handleSubmit already
+      // owns the outcome of its own request, success or failure.
+      if (
+        !submittingRef.current &&
+        selectedSlotId &&
+        (stepRef.current === "slot" || stepRef.current === "details") &&
+        !next.some((slot) => slot.id === selectedSlotId)
+      ) {
+        setSelectedSlotId(null);
+        setStep("slot");
+        setSubmitError("הזמן שנבחר כבר אינו פנוי. נא לבחור זמן אחר.");
+      }
     });
     return () => {
       active = false;
     };
-  }, [selectedDoctorId, storeState]);
+  }, [selectedDoctorId, storeState, selectedSlotId, step, setStep]);
 
   const selectedDoctor = useMemo(
     () => doctors?.find((d) => d.id === selectedDoctorId) ?? null,
@@ -101,7 +147,7 @@ export default function FamilyPage() {
     setSelectedDoctorId(doctorId);
     setSelectedSlotId(null);
     setStep("slot");
-  }, []);
+  }, [setStep]);
 
   const handleSelectSlot = useCallback((slotId: string) => {
     setSelectedSlotId((current) => (current === slotId ? null : slotId));
@@ -110,6 +156,7 @@ export default function FamilyPage() {
   const handleSubmit = useCallback(
     async (values: BookingFormSubmit) => {
       if (!selectedDoctorId || !selectedSlotId) return;
+      submittingRef.current = true;
       setSubmitting(true);
       setSubmitError(null);
       try {
@@ -126,10 +173,11 @@ export default function FamilyPage() {
         setStep("slot");
         setSelectedSlotId(null);
       } finally {
+        submittingRef.current = false;
         setSubmitting(false);
       }
     },
-    [selectedDoctorId, selectedSlotId]
+    [selectedDoctorId, selectedSlotId, setStep]
   );
 
   const restart = useCallback(() => {
@@ -138,11 +186,11 @@ export default function FamilyPage() {
     setSelectedDoctorId(null);
     setSubmitError(null);
     setStep("doctor");
-  }, []);
+  }, [setStep]);
 
   if (step === "success" && booking && selectedDoctor) {
     return (
-      <div key={step} className="animate-fade-in-up">
+      <div key={step} className="animate-step-in">
         <FamilyShell departmentName={departmentName} title="">
           <BookingSuccess booking={booking} doctor={selectedDoctor} onDone={restart} />
         </FamilyShell>
@@ -152,7 +200,7 @@ export default function FamilyPage() {
 
   if (step === "details" && selectedDoctor && selectedSlot) {
     return (
-      <div key={step} className="animate-fade-in-up">
+      <div key={step} className="animate-step-in">
         <FamilyShell
           departmentName={departmentName}
           title="עוד כמה פרטים"
@@ -173,7 +221,7 @@ export default function FamilyPage() {
 
   if (step === "slot" && selectedDoctor) {
     return (
-      <div key={step} className="animate-fade-in-up">
+      <div key={step} className="animate-step-in">
         <FamilyShell
           departmentName={departmentName}
           title="מתי נוח לכם לדבר?"
@@ -224,7 +272,7 @@ export default function FamilyPage() {
   }
 
   return (
-    <div key={step} className="animate-fade-in-up">
+    <div key={step} className="animate-step-in">
       <FamilyShell
         departmentName={departmentName}
         title="קביעת שיחה עם רופא המחלקה"

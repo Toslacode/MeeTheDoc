@@ -64,6 +64,21 @@
      they don't collide with the Tailwind theme keys that reference them. */
   --elevation-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
   --elevation-card-hover: 0 2px 4px rgba(16, 24, 40, 0.06), 0 12px 32px rgba(16, 24, 40, 0.1);
+
+  /* Glass surface — see .glass-surface below. Calibrated against the one
+     glass object that already existed in the app (the bottom nav's
+     bg-card/92 backdrop-blur-md) rather than an arbitrary "iOS glass"
+     preset, so new glass surfaces read as the same material, not a
+     different, showier one.
+
+     A translucent WHITE edge — the classic "iOS glass" border — nearly
+     disappears here: almost everything in this app sits on the light
+     --background/--card themselves, not on a dark or busy backdrop, so a
+     white-on-white line reads as no edge at all. A soft primary-tinted
+     edge stays visible on every surface it's used on and reads as "this
+     app's glass," not a borrowed dark-mode default. */
+  --glass-border: rgba(37, 99, 235, 0.18);
+  --glass-blur: 16px;
 }
 
 .dark {
@@ -102,6 +117,9 @@
 
   --elevation-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
   --elevation-card-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-blur: 16px;
 }
 
 @theme inline {
@@ -145,9 +163,19 @@
      Fast, subtle, professional: 150–250ms, standard ease-out curve.
      Exposed as `animate-*` utilities (tw-animate-css's --animate-*
      namespace convention) so screens can write e.g.
-     className="animate-fade-in-up [animation-delay:80ms]" for staggering. */
+     className="animate-fade-in-up [animation-delay:80ms]" for staggering.
+
+     Two curves now, deliberately: the standard ease-out above is for
+     things settling into place (entrances, dialogs). A second, springier
+     curve below (chip-pop) is reserved for direct-manipulation feedback —
+     "you just picked this" — so the busiest controls in the app (slot
+     chips, option cards) read as more alive than a passive fade, without
+     borrowing that same overshoot for everything else. */
   --animate-fade-in-up: fade-in-up 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-step-in: step-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-success-check: success-check 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-chip-pop: chip-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-skeleton-shimmer: skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
 @keyframes fade-in-up {
@@ -174,6 +202,151 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* A touch more "materializing" than fade-in-up — used for the family
+   flow's step-to-step transition, so a new step reads as glass settling
+   into place rather than a plain fade. */
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Selection feedback for slot-chip / option-card: overshoots past the
+   resting scale then settles back, distinct from the plain hover/press
+   transitions already on those controls. */
+@keyframes chip-pop {
+  0% {
+    transform: scale(1);
+  }
+  55% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+}
+
+/* Replaces a bare animate-pulse with a light sweep across the tint,
+   matching the rest of the app's custom motion vocabulary instead of
+   Tailwind's generic default. */
+.skeleton-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    transparent 100%
+  );
+  background-size: 60% 100%;
+  background-repeat: no-repeat;
+  animation: var(--animate-skeleton-shimmer);
+}
+
+/*
+ * ── Glass surfaces ──────────────────────────────────────────────────────
+ * Composable with ordinary Tailwind utilities on the same element, not a
+ * replacement for them: pair `.glass-surface` with a translucent
+ * background (`bg-card/70`, `bg-secondary/55`) and a border
+ * (`border border-[color:var(--glass-border)]`, or a state color like
+ * `border-primary` where a selected state needs to say so). This class
+ * supplies only the blur and a soft top-highlight overlay — never a
+ * background or border of its own — specifically so a selected state can
+ * still override the border color normally, without fighting this class.
+ * Reserved for chrome and secondary surfaces that already sit on a solid
+ * page/card background (nav, dialogs, outline/secondary buttons, slot
+ * chips, option cards, info banners); primary/destructive CTA fills
+ * deliberately never get this class — see .btn-specular / .btn-sheen
+ * below for how those get a "liquid" feel without sacrificing the opaque
+ * fill their white text needs for contrast.
+ *
+ * Deliberately does NOT set `position` itself. This is an unlayered plain
+ * CSS rule, so it always wins over a Tailwind utility of equal property
+ * regardless of class order — a `position: relative` here would silently
+ * defeat an `absolute` utility placed on the same element (as it did on
+ * the first pass of the sliding nav/tab indicators, which need
+ * `absolute`, not `relative`). Every call site supplies its own `relative`
+ * or `absolute` as an ordinary Tailwind class instead.
+ */
+.glass-surface {
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+}
+
+.glass-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 45%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.dark .glass-surface::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 45%);
+}
+
+/*
+ * ── Primary-button "liquid" treatment ────────────────────────────────────
+ * The primary/destructive fills stay fully opaque (white text on a solid
+ * saturated color needs the contrast), so instead of glass they get a
+ * baked-in specular highlight plus a light sweep that plays on press —
+ * the same "liquid" family without touching contrast.
+ */
+.btn-specular {
+  position: relative;
+}
+
+.btn-specular::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%);
+  pointer-events: none;
+}
+
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.32) 45%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.32) 55%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.btn-sheen:active::after {
+  transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(120%);
 }
 
 @layer base {

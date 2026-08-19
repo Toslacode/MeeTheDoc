@@ -67,7 +67,7 @@ function BookingSuccess({
         <Row label="מטופל" value={booking.patientName} />
       </div>
 
-      <div className="bg-secondary/70 border-primary/12 animate-fade-in-up mt-4 flex w-full items-start gap-2.5 rounded-lg border px-4 py-3 text-start [animation-delay:250ms]">
+      <div className="glass-surface relative bg-secondary/55 border-primary/12 animate-fade-in-up mt-4 flex w-full items-start gap-2.5 rounded-lg border px-4 py-3 text-start [animation-delay:250ms]">
         <NextIcon className="text-primary mt-0.5 size-4.5 shrink-0" aria-hidden />
         <p className="text-foreground text-sm font-medium">{next.text}</p>
       </div>

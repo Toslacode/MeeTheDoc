@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { ShieldCheck } from "lucide-react";
 
 import { MeeTheDocLogo } from "@/components/brand/meethedoc-logo";
@@ -15,8 +16,29 @@ function FamilyShell({
   subtitle?: string;
   children: React.ReactNode;
 }) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // The parent remounts a fresh FamilyShell on every family-flow step
+    // change (`key={step}` on the wrapper in app/family/page.tsx), so this
+    // runs once per step and moves focus onto the new step instead of
+    // leaving a screen-reader user on a control that just left the DOM.
+    // The success step passes an empty title (it renders its own heading
+    // inside `children`), so fall back to the landmark itself there.
+    if (title) {
+      headingRef.current?.focus();
+    } else {
+      mainRef.current?.focus();
+    }
+  }, [title]);
+
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-col px-4 pt-7 pb-14 sm:px-6 sm:pt-10">
+    <main
+      ref={mainRef}
+      tabIndex={-1}
+      className="mx-auto flex w-full max-w-2xl flex-col px-4 pt-7 pb-14 outline-none sm:px-6 sm:pt-10"
+    >
       <header className="mb-6 flex flex-col items-center text-center">
         <MeeTheDocLogo size="lg" />
 
@@ -25,7 +47,11 @@ function FamilyShell({
           {departmentName}
         </span>
 
-        <h1 className="text-foreground mt-1.5 text-2xl font-extrabold text-balance sm:text-3xl">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-foreground mt-1.5 text-2xl font-extrabold text-balance outline-none sm:text-3xl"
+        >
           {title}
         </h1>
         {subtitle ? (

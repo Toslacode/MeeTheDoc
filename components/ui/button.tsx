@@ -17,14 +17,26 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        // Solid fills stay fully opaque — white text on a saturated color
+        // needs the contrast. btn-specular/btn-sheen give these the same
+        // "liquid" family as the glass surfaces below without touching
+        // that opacity: a baked-in top highlight plus a light sweep that
+        // plays on press (app/globals.css).
         default:
-          "bg-primary text-primary-foreground shadow-card hover:bg-primary-hover active:bg-primary-active",
-        secondary: "bg-secondary text-foreground hover:bg-secondary/70",
-        outline:
-          "border-input bg-card text-foreground border hover:border-primary/35 hover:bg-secondary/50",
-        ghost: "text-primary hover:bg-secondary",
+          "btn-specular btn-sheen bg-primary text-primary-foreground shadow-card hover:bg-primary-hover active:bg-primary-active",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "btn-specular btn-sheen bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        // Already-translucent surfaces — glass-surface adds the blur,
+        // border, and top highlight; the utility class here supplies only
+        // the tint (see app/globals.css's .glass-surface comment).
+        secondary:
+          "glass-surface relative border border-[color:var(--glass-border)] bg-secondary/60 text-foreground hover:bg-secondary/85",
+        outline:
+          "glass-surface relative border border-[color:var(--glass-border)] bg-card/70 text-foreground hover:bg-secondary/50",
+        // Left alone deliberately: ghost has no surface at rest by
+        // design, and a permanent frosted panel would fight that role
+        // everywhere it's used as a quiet secondary action.
+        ghost: "text-primary hover:bg-secondary",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

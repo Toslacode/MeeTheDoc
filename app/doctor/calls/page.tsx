@@ -15,6 +15,7 @@ import {
   updateBookingStatus,
 } from "@/lib/store/api";
 import { useCurrentDoctorId, useStoreState } from "@/lib/store/context";
+import { useSlidingIndicator } from "@/lib/use-sliding-indicator";
 import { cn } from "@/lib/utils";
 import type { Booking, BookingStatus, Doctor } from "@/types";
 
@@ -98,6 +99,8 @@ export default function DoctorCallsPage() {
     []
   );
 
+  const { indicatorRect, registerItem } = useSlidingIndicator(tab);
+
   return (
     <main className="mx-auto w-full max-w-2xl px-4 pt-7 sm:px-6 sm:pt-9">
       <header className="mb-6">
@@ -124,23 +127,33 @@ export default function DoctorCallsPage() {
       <div
         role="tablist"
         aria-label="סינון שיחות"
-        className="border-border bg-card mb-5 grid grid-cols-3 gap-1 rounded-lg border p-1"
+        className="border-border bg-card relative mb-5 grid grid-cols-3 gap-1 rounded-lg border p-1"
       >
+        {indicatorRect ? (
+          <span
+            aria-hidden
+            className="glass-surface border border-[color:var(--glass-border)] bg-secondary/80 pointer-events-none absolute top-1 bottom-1 rounded-md transition-[inset-inline-start,width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            style={{
+              insetInlineStart: indicatorRect.insetInlineStart,
+              width: indicatorRect.width,
+            }}
+          />
+        ) : null}
+
         {TABS.map((t) => (
           <button
             key={t.id}
+            ref={registerItem(t.id)}
             role="tab"
             type="button"
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              "min-h-10 rounded-md text-sm font-semibold",
-              "transition-[background-color,color,transform] duration-150 ease-out",
+              "relative min-h-10 rounded-md text-sm font-semibold",
+              "transition-[color,transform] duration-150 ease-out",
               "active:scale-[0.97]",
               "outline-none focus-visible:ring-ring focus-visible:ring-[3px]",
-              tab === t.id
-                ? "bg-secondary text-primary"
-                : "text-muted-foreground hover:text-foreground"
+              tab === t.id ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
             {t.label}

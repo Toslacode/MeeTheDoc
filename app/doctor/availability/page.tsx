@@ -49,14 +49,31 @@ export default function DoctorAvailabilityPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [published, setPublished] = useState(false);
 
-  // Load this doctor's day and seed the selection from what's already
-  // published, so "publish" is an edit of the current state, not a reset.
+  // Refreshes the display grid live — including a slot flipping to
+  // "locked" the moment a family books it while this page is open.
+  useEffect(() => {
+    let active = true;
+    void listSlotsForDoctor(currentDoctorId).then((all) => {
+      if (!active) return;
+      setSlots(all.filter((s) => s.date === today));
+    });
+    return () => {
+      active = false;
+    };
+  }, [currentDoctorId, today, storeState]);
+
+  // Seeds the local selection from what's already published, so "publish"
+  // is an edit of the current state, not a reset — but only when the
+  // acting doctor or day actually changes. Deliberately NOT keyed on
+  // storeState like the effect above: re-running this on every unrelated
+  // store mutation (a family booking a completely different doctor, say)
+  // would silently overwrite any not-yet-published times this doctor has
+  // toggled but not hit "פרסם זמינות" for yet.
   useEffect(() => {
     let active = true;
     void listSlotsForDoctor(currentDoctorId).then((all) => {
       if (!active) return;
       const day = all.filter((s) => s.date === today);
-      setSlots(day);
       setSelected(
         new Set(day.filter((s) => s.isPublished).map((s) => s.startTime))
       );
@@ -64,7 +81,7 @@ export default function DoctorAvailabilityPage() {
     return () => {
       active = false;
     };
-  }, [currentDoctorId, today, storeState]);
+  }, [currentDoctorId, today]);
 
   const bookedTimes = useMemo(
     () => new Set((slots ?? []).filter((s) => s.bookingId !== null).map((s) => s.startTime)),
@@ -141,7 +158,7 @@ export default function DoctorAvailabilityPage() {
       </header>
 
       {published ? (
-        <div className="border-primary/18 bg-secondary/80 animate-fade-in-up mb-5 flex items-center gap-3 rounded-xl border px-4 py-3.5">
+        <div className="glass-surface relative border-primary/18 bg-secondary/55 animate-fade-in-up mb-5 flex items-center gap-3 rounded-xl border px-4 py-3.5">
           <span className="bg-primary animate-success-check flex size-9 shrink-0 items-center justify-center rounded-full">
             <Check className="size-5 stroke-[3] text-white" aria-hidden />
           </span>

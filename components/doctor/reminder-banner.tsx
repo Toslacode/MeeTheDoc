@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
  */
 function ReminderBanner() {
   return (
-    <div className="border-primary/18 bg-secondary/80 animate-fade-in-up mb-5 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3.5">
+    <div className="glass-surface relative border-primary/18 bg-secondary/55 animate-fade-in-up mb-5 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3.5">
       <span className="bg-primary/12 text-primary flex size-9 shrink-0 items-center justify-center rounded-full">
         <BellRing className="size-4.5" aria-hidden />
       </span>

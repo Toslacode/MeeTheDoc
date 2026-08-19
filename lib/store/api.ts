@@ -9,6 +9,8 @@ import type {
   Topic,
 } from "@/types";
 
+import { validateEmail, validatePhone } from "@/lib/validation";
+
 import { store } from "./external-store";
 import { createId } from "./id";
 
@@ -168,13 +170,18 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
   if (!slot.isPublished || slot.bookingId !== null) {
     throw new Error(`Slot "${input.slotId}" is not currently available for booking`);
   }
-  if (
-    !input.patientName.trim() ||
-    !input.familyContactName.trim() ||
-    !input.email.trim() ||
-    !input.phone.trim()
-  ) {
+  if (!input.patientName.trim() || !input.familyContactName.trim()) {
     throw new Error("Missing required booking fields");
+  }
+  // Same shape rules the form itself enforces (lib/validation.ts) — kept
+  // here too so this being the only sanctioned write surface actually
+  // means something: a future caller that skips form validation still
+  // can't write a malformed phone/email into a booking.
+  if (validatePhone(input.phone)) {
+    throw new Error(`Invalid phone number: "${input.phone}"`);
+  }
+  if (validateEmail(input.email)) {
+    throw new Error(`Invalid email address: "${input.email}"`);
   }
 
   const booking: Booking = {

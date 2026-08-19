@@ -6,6 +6,13 @@ import { ChevronLeft, LogOut, RotateCcw } from "lucide-react";
 
 import { AvatarPicker } from "@/components/doctor/avatar-picker";
 import { CurrentDoctorSwitcher } from "@/components/shared/current-doctor-switcher";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { getDoctor, listDepartments, resetDemoData } from "@/lib/store/api";
 import { useCurrentDoctorId, useStoreState } from "@/lib/store/context";
 import type { Department, Doctor } from "@/types";
@@ -37,6 +44,7 @@ export default function DoctorProfilePage() {
   const currentDoctorId = useCurrentDoctorId();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [department, setDepartment] = useState<Department | null>(null);
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -74,7 +82,7 @@ export default function DoctorProfilePage() {
         <Row label="נתוני הדגמה">
           <button
             type="button"
-            onClick={() => void resetDemoData()}
+            onClick={() => setConfirmingReset(true)}
             className="text-primary hover:bg-secondary inline-flex min-h-10 items-center gap-1.5 rounded-md px-3 text-sm font-semibold transition-colors outline-none focus-visible:ring-ring focus-visible:ring-[3px]"
           >
             <RotateCcw className="size-4" aria-hidden />
@@ -93,6 +101,37 @@ export default function DoctorProfilePage() {
           <ChevronLeft className="text-muted-foreground/60 size-4" aria-hidden />
         </Link>
       </div>
+
+      <Dialog open={confirmingReset} onOpenChange={setConfirmingReset}>
+        <DialogContent>
+          <DialogTitle className="text-foreground text-lg font-bold">
+            לאפס את נתוני ההדגמה?
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground text-sm leading-relaxed">
+            כל הזמינות והשיחות של כל הרופאים יחזרו למצב ההתחלתי. אי אפשר לבטל
+            פעולה זו.
+          </DialogDescription>
+          <div className="mt-2 flex gap-2.5">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setConfirmingReset(false)}
+            >
+              ביטול
+            </Button>
+            <Button
+              variant="destructive"
+              className="flex-1"
+              onClick={() => {
+                void resetDemoData();
+                setConfirmingReset(false);
+              }}
+            >
+              איפוס
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

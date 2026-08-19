@@ -10,6 +10,11 @@ import type { Doctor } from "@/types";
 /** Longest edge after downscaling. Retina-sharp at the sizes we render. */
 const MAX_EDGE = 256;
 const ACCEPTED = ["image/jpeg", "image/png", "image/webp"];
+// Guards the decode itself, not just the result: createImageBitmap has to
+// fully decode the source into memory before any downscaling happens, so
+// an unbounded original (a raw multi-thousand-pixel camera file) can hang
+// or crash a low-memory device before MAX_EDGE ever gets applied.
+const MAX_SOURCE_BYTES = 15 * 1024 * 1024;
 
 /**
  * Downscales in a canvas before storing. The entire store is persisted to
@@ -18,7 +23,13 @@ const ACCEPTED = ["image/jpeg", "image/png", "image/webp"];
  */
 async function toDownscaledDataUrl(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+  const longestEdge = Math.max(bitmap.width, bitmap.height);
+  if (longestEdge === 0) {
+    bitmap.close();
+    throw new Error("image has no visible content");
+  }
+
+  const scale = Math.min(1, MAX_EDGE / longestEdge);
   const width = Math.round(bitmap.width * scale);
   const height = Math.round(bitmap.height * scale);
 
@@ -45,6 +56,10 @@ function AvatarPicker({ doctor }: { doctor: Doctor | null }) {
 
     if (!ACCEPTED.includes(file.type)) {
       setError("אפשר להעלות קובץ JPG, PNG או WebP");
+      return;
+    }
+    if (file.size > MAX_SOURCE_BYTES) {
+      setError("הקובץ גדול מדי. נסו תמונה עד 15MB.");
       return;
     }
     setBusy(true);

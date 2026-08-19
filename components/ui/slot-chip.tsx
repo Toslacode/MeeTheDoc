@@ -31,14 +31,18 @@ function SlotChip({
       disabled={disabled}
       onClick={onToggle}
       className={cn(
-        "min-h-13 rounded-md border text-base font-semibold tabular-nums",
+        "relative min-h-13 rounded-md border text-base font-semibold tabular-nums",
         "transition-[background-color,color,border-color,transform,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
         "outline-none focus-visible:ring-ring focus-visible:ring-[3px]",
         "active:scale-97",
         selected
-          ? "border-primary bg-primary text-primary-foreground scale-103 shadow-card"
-          : "border-input bg-card text-foreground hover:border-primary/35 hover:bg-secondary/45",
-        disabled && "cursor-not-allowed opacity-40 hover:border-input hover:bg-card",
+          ? // Solid fill, not glass — this is functionally a primary CTA
+            // once chosen, same contrast rule as button.tsx's default
+            // variant. animate-chip-pop plays once on the transition into
+            // this state (see app/globals.css).
+            "border-primary bg-primary text-primary-foreground scale-103 shadow-card animate-chip-pop"
+          : "glass-surface border-[color:var(--glass-border)] bg-card/55 text-foreground hover:border-primary/35 hover:bg-secondary/45",
+        disabled && "cursor-not-allowed opacity-40 hover:bg-card/55",
         className
       )}
     >

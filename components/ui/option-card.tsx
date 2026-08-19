@@ -29,14 +29,18 @@ function OptionCard({
       aria-pressed={selected}
       onClick={onSelect}
       className={cn(
-        "flex min-h-22 flex-col items-center justify-center gap-2 rounded-md border px-3 py-4",
+        "glass-surface relative flex min-h-22 flex-col items-center justify-center gap-2 rounded-md border px-3 py-4",
         "text-center text-sm font-semibold",
         "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]",
         "outline-none focus-visible:ring-ring focus-visible:ring-[3px]",
         "active:scale-98",
         selected
-          ? "border-primary bg-secondary text-foreground ring-primary shadow-card ring-1"
-          : "border-input bg-card text-foreground hover:border-primary/35 hover:bg-secondary/40",
+          ? // Not a solid primary fill (that's bg-secondary, the soft-blue
+            // tint family), so unlike a slot chip's selected state this
+            // one has headroom to stay glass — the primary-colored
+            // ring/icon still carries the selection signal.
+            "border-primary bg-secondary/70 text-foreground ring-primary shadow-card ring-1 animate-chip-pop"
+          : "border-[color:var(--glass-border)] bg-card/55 text-foreground hover:border-primary/35 hover:bg-secondary/40",
         className
       )}
     >

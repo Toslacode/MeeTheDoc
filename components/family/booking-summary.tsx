@@ -16,7 +16,7 @@ function BookingSummary({
   time: string;
 }) {
   return (
-    <div className="bg-secondary/70 border-primary/12 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border px-4 py-3">
+    <div className="glass-surface relative bg-secondary/55 border-primary/12 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-lg border px-4 py-3">
       <span className="text-foreground flex items-center gap-1.5 text-sm font-semibold">
         <Stethoscope className="text-primary size-4" aria-hidden />
         {doctor.name}
