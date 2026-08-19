@@ -24,6 +24,19 @@ export type StoreAction =
   | { type: "HYDRATE"; state: StoreState }
   | { type: "RESET"; state: StoreState }
   | { type: "PUBLISH_SLOTS"; doctorId: string; slotIds: string[] }
+  | {
+      /**
+       * Replaces one doctor's slots for one day with exactly `slots`.
+       * Booked slots are never touched — a family that already holds a
+       * booking can't have it dropped by the doctor re-publishing the day.
+       * lib/store/api.ts builds the replacement list (including ids), so
+       * the reducer stays free of id generation and clock reads.
+       */
+      type: "REPLACE_DAY_SLOTS";
+      doctorId: string;
+      date: string;
+      slots: AvailabilitySlot[];
+    }
   | { type: "UNPUBLISH_SLOTS"; doctorId: string; slotIds: string[] }
   | { type: "CREATE_BOOKING"; booking: Booking }
   | { type: "UPDATE_BOOKING_STATUS"; bookingId: string; status: BookingStatus }
@@ -58,6 +71,16 @@ export function storeReducer(state: StoreState, action: StoreAction): StoreState
             : slot
         ),
       };
+
+    case "REPLACE_DAY_SLOTS": {
+      const untouched = state.slots.filter(
+        (slot) =>
+          slot.doctorId !== action.doctorId ||
+          slot.date !== action.date ||
+          slot.bookingId !== null
+      );
+      return { ...state, slots: [...untouched, ...action.slots] };
+    }
 
     case "CREATE_BOOKING":
       return {

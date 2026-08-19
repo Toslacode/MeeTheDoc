@@ -1,0 +1,15 @@
+import { cn } from "@/lib/utils";
+
+function Label({ className, ...props }: React.ComponentProps<"label">) {
+  return (
+    <label
+      className={cn(
+        "text-foreground mb-1.5 block text-sm font-semibold",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Label };

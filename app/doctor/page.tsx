@@ -1,5 +1,6 @@
-import { RoutePlaceholder } from "@/components/route-placeholder";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return <RoutePlaceholder route="/doctor" />;
+/** /doctor is not a screen of its own — the doctor's home is their calls. */
+export default function DoctorIndexPage() {
+  redirect("/doctor/calls");
 }

@@ -1,29 +1,32 @@
-import type { ReactElement } from "react";
-
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import DoctorAvailabilityPage from "@/app/doctor/availability/page";
-import DoctorCallsPage from "@/app/doctor/calls/page";
-import DoctorPage from "@/app/doctor/page";
+import { StoreProvider } from "@/lib/store/context";
+import LoginPage from "@/app/page";
 import FamilyPage from "@/app/family/page";
-import HomePage from "@/app/page";
 
-const PAGES: Array<[route: string, Page: () => ReactElement]> = [
-  ["/", HomePage],
-  ["/doctor", DoctorPage],
-  ["/doctor/calls", DoctorCallsPage],
-  ["/doctor/availability", DoctorAvailabilityPage],
-  ["/family", FamilyPage],
-];
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
+  usePathname: () => "/",
+}));
 
-describe("placeholder routes", () => {
-  it.each(PAGES)("%s renders its own route name", (route, Page) => {
-    render(<Page />);
+function renderWithStore(ui: React.ReactElement) {
+  return render(<StoreProvider>{ui}</StoreProvider>);
+}
 
-    const heading = screen.getByRole("heading", { level: 1 });
+describe("routes render", () => {
+  it("/ renders the MeeTheDoc sign-in", () => {
+    renderWithStore(<LoginPage />);
+    expect(
+      screen.getByRole("heading", { level: 1, name: "MeeTheDoc" })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "כניסה" })).toBeInTheDocument();
+  });
 
-    expect(heading).toBeInTheDocument();
-    expect(heading.textContent).toBe(route);
+  it("/family asks the family to choose a doctor", () => {
+    renderWithStore(<FamilyPage />);
+    expect(
+      screen.getByRole("heading", { level: 1, name: "קביעת שיחה עם רופא המחלקה" })
+    ).toBeInTheDocument();
   });
 });
