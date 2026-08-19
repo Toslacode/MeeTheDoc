@@ -54,7 +54,7 @@ Placeholder pages only — each renders its own route path as text.
 ```
 app/                              App Router pages, layout, and global styles
 components/                       Shared React components
-components/ui/                    shadcn/ui primitives (generated; edit deliberately)
+components/ui/                    shadcn/ui primitives (see "Known environment constraint")
 components/family/                Components for the family-facing experience
 components/doctor/                Components for the doctor-facing experience
 lib/                              Framework-agnostic helpers (e.g. `cn`)
@@ -91,3 +91,23 @@ authentication, no API routes, no server actions, and no third-party service
 integrations (Supabase, Google APIs, email providers, etc.). Nothing reads or
 writes data. Every page is a static placeholder. Backend work is a separate,
 later decision.
+
+## Known environment constraint: the shadcn CLI
+
+`ui.shadcn.com` is **not reachable from this development environment** — the
+egress proxy rejects it (`403` on `CONNECT`), while `registry.npmjs.org` is
+allowlisted. `npx shadcn@latest init` and `npx shadcn@latest add <component>`
+therefore fail here.
+
+The existing primitives in `components/ui/` (`button`, `card`) are the canonical
+shadcn **new-york** output, written by hand against the same dependency set
+(`@radix-ui/react-slot`, `class-variance-authority`, `clsx`, `tailwind-merge`),
+with the neutral CSS-variable theme in `app/globals.css` and a matching
+`components.json`. They are functionally equivalent to CLI-generated files.
+
+To add further shadcn components you have two options:
+
+1. **Allowlist `ui.shadcn.com`** in the environment's network policy, after which
+   the CLI works normally — this is the preferred fix.
+2. **Copy the component source** from the shadcn documentation into
+   `components/ui/` manually, keeping `components.json` accurate.
