@@ -40,7 +40,13 @@ export type StoreAction =
   | { type: "UNPUBLISH_SLOTS"; doctorId: string; slotIds: string[] }
   | { type: "CREATE_BOOKING"; booking: Booking }
   | { type: "UPDATE_BOOKING_STATUS"; bookingId: string; status: BookingStatus }
-  | { type: "SWITCH_DOCTOR"; doctorId: string };
+  | { type: "SWITCH_DOCTOR"; doctorId: string }
+  | {
+      /** `avatarDataUrl: null` clears the picture back to initials. */
+      type: "SET_DOCTOR_AVATAR";
+      doctorId: string;
+      avatarDataUrl: string | null;
+    };
 
 export function storeReducer(state: StoreState, action: StoreAction): StoreState {
   switch (action.type) {
@@ -100,6 +106,16 @@ export function storeReducer(state: StoreState, action: StoreAction): StoreState
           booking.id === action.bookingId
             ? { ...booking, status: action.status }
             : booking
+        ),
+      };
+
+    case "SET_DOCTOR_AVATAR":
+      return {
+        ...state,
+        doctors: state.doctors.map((doctor) =>
+          doctor.id === action.doctorId
+            ? { ...doctor, avatarDataUrl: action.avatarDataUrl ?? undefined }
+            : doctor
         ),
       };
 

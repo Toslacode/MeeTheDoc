@@ -1,16 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LogOut, Mail, Stethoscope } from "lucide-react";
 import Link from "next/link";
+import { ChevronLeft, LogOut, RotateCcw } from "lucide-react";
 
-import { MeeTheDocLogo } from "@/components/brand/meethedoc-logo";
+import { AvatarPicker } from "@/components/doctor/avatar-picker";
 import { CurrentDoctorSwitcher } from "@/components/shared/current-doctor-switcher";
-import { Button } from "@/components/ui/button";
-import { doctorInitials } from "@/lib/format";
 import { getDoctor, listDepartments, resetDemoData } from "@/lib/store/api";
 import { useCurrentDoctorId, useStoreState } from "@/lib/store/context";
 import type { Department, Doctor } from "@/types";
+
+/**
+ * Deliberately not a stack of white panels. The identity block sits
+ * directly on the page ground — it is the subject, so boxing it adds a
+ * border that communicates nothing — and everything actionable is grouped
+ * into ONE divided list. Elevation is reserved for things that are
+ * genuinely a layer above the page.
+ */
+function Row({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-14 items-center justify-between gap-4 px-4">
+      <span className="text-foreground text-sm font-semibold">{label}</span>
+      {children}
+    </div>
+  );
+}
 
 export default function DoctorProfilePage() {
   const storeState = useStoreState();
@@ -33,58 +53,45 @@ export default function DoctorProfilePage() {
   }, [currentDoctorId, storeState]);
 
   return (
-    <main className="mx-auto w-full max-w-2xl px-4 pt-7 pb-14 sm:px-6 sm:pt-9">
-      <h1 className="text-foreground mb-6 text-2xl font-extrabold sm:text-3xl">פרופיל</h1>
+    <main className="mx-auto w-full max-w-lg px-4 pt-8 sm:px-6 sm:pt-12">
+      <section className="flex flex-col items-center text-center">
+        <AvatarPicker doctor={doctor} />
 
-      <section className="border-border bg-card shadow-card rounded-xl border p-5">
-        <div className="flex items-center gap-4">
-          <span className="bg-secondary text-primary flex size-14 items-center justify-center rounded-full text-lg font-bold">
-            {doctor ? doctorInitials(doctor.name) : ""}
+        <h1 className="text-foreground mt-4 text-2xl font-extrabold tracking-tight">
+          {doctor?.name ?? " "}
+        </h1>
+        <p className="text-muted-foreground mt-0.5 text-sm">
+          {doctor?.specialty}
+          {department ? ` · ${department.name}` : ""}
+        </p>
+      </section>
+
+      <div className="border-border bg-card divide-border mt-9 divide-y rounded-xl border">
+        <Row label="מחובר כ">
+          <CurrentDoctorSwitcher />
+        </Row>
+
+        <Row label="נתוני הדגמה">
+          <button
+            type="button"
+            onClick={() => void resetDemoData()}
+            className="text-primary hover:bg-secondary inline-flex min-h-10 items-center gap-1.5 rounded-md px-3 text-sm font-semibold transition-colors outline-none focus-visible:ring-ring focus-visible:ring-[3px]"
+          >
+            <RotateCcw className="size-4" aria-hidden />
+            איפוס
+          </button>
+        </Row>
+
+        <Link
+          href="/"
+          className="hover:bg-secondary/50 flex min-h-14 items-center justify-between gap-4 px-4 transition-colors outline-none focus-visible:ring-ring focus-visible:ring-[3px]"
+        >
+          <span className="text-foreground flex items-center gap-2 text-sm font-semibold">
+            <LogOut className="text-muted-foreground size-4 rtl:-scale-x-100" aria-hidden />
+            יציאה
           </span>
-          <div className="min-w-0">
-            <p className="text-foreground text-lg font-bold">{doctor?.name}</p>
-            <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
-              <Stethoscope className="size-4" aria-hidden />
-              {doctor?.specialty}
-            </p>
-            <p className="text-muted-foreground mt-0.5 text-sm">{department?.name}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-border bg-card shadow-card mt-4 rounded-xl border p-5">
-        <h2 className="text-foreground text-base font-bold">הדגמה</h2>
-        <p className="text-muted-foreground mt-1 mb-3.5 text-sm leading-relaxed">
-          החלפת הרופא המחובר עומדת כאן במקום התחברות אמיתית, כדי שאפשר יהיה להדגים
-          שכל רופא מנהל זמינות ושיחות בנפרד.
-        </p>
-        <CurrentDoctorSwitcher />
-      </section>
-
-      <section className="border-border bg-card shadow-card mt-4 rounded-xl border p-5">
-        <h2 className="text-foreground text-base font-bold">נתוני הדגמה</h2>
-        <p className="text-muted-foreground mt-1 mb-3.5 text-sm leading-relaxed">
-          איפוס יחזיר את הזמינות והשיחות למצב ההתחלתי.
-        </p>
-        <div className="flex flex-wrap gap-2.5">
-          <Button variant="outline" onClick={() => void resetDemoData()}>
-            אפס נתוני הדגמה
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/">
-              <LogOut className="rtl:-scale-x-100" aria-hidden />
-              יציאה
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      <div className="text-muted-foreground mt-8 flex items-center justify-center gap-2 text-xs">
-        <MeeTheDocLogo size="sm" />
-        <span className="flex items-center gap-1">
-          <Mail className="size-3.5" aria-hidden />
-          תזכורת בוקר תישלח אוטומטית כשלא פורסמה זמינות
-        </span>
+          <ChevronLeft className="text-muted-foreground/60 size-4" aria-hidden />
+        </Link>
       </div>
     </main>
   );

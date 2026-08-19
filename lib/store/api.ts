@@ -198,6 +198,19 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
   return toAsync({ ...booking });
 }
 
+/**
+ * Sets (or, with `null`, clears) the doctor's profile picture. Callers are
+ * responsible for downscaling first — see
+ * components/doctor/avatar-picker.tsx.
+ */
+export async function setDoctorAvatar(
+  doctorId: string,
+  avatarDataUrl: string | null
+): Promise<Doctor | null> {
+  store.dispatch({ type: "SET_DOCTOR_AVATAR", doctorId, avatarDataUrl });
+  return getDoctor(doctorId);
+}
+
 export interface BookingFilter {
   date?: string;
   status?: BookingStatus;

@@ -32,6 +32,22 @@ function CallCard({
 }) {
   const MeetingIcon = MEETING_ICON[booking.meetingType];
   const isDone = booking.status !== "scheduled";
+  const canJoin =
+    booking.meetingType === "google_meet" && booking.status === "scheduled";
+
+  const actions = (
+    <>
+      <Button variant="outline" size="sm" onClick={onOpen} className="flex-1 sm:flex-none">
+        פרטי השיחה
+      </Button>
+      {canJoin ? (
+        <Button size="sm" className="flex-1 sm:flex-none">
+          <Video aria-hidden />
+          הצטרף
+        </Button>
+      ) : null}
+    </>
+  );
 
   return (
     <article
@@ -43,12 +59,10 @@ function CallCard({
         isDone && "opacity-72"
       )}
     >
-      <div className="flex items-start gap-4">
-        <div className="flex flex-col items-center gap-1">
-          <Time className="text-foreground text-xl leading-none font-extrabold">
-            {booking.startTime}
-          </Time>
-        </div>
+      <div className="flex items-start gap-4 sm:gap-6">
+        <Time className="text-foreground shrink-0 text-xl leading-none font-extrabold">
+          {booking.startTime}
+        </Time>
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -61,10 +75,14 @@ function CallCard({
           </div>
 
           <p className="text-muted-foreground mt-1 text-sm">
-            מטופל: <span className="text-foreground font-medium">{booking.patientName}</span>
+            מטופל:{" "}
+            <span className="text-foreground font-medium">{booking.patientName}</span>
           </p>
           <p className="text-muted-foreground mt-0.5 text-sm">
-            נושא: <span className="text-foreground font-medium">{TOPIC_LABELS[booking.topic]}</span>
+            נושא:{" "}
+            <span className="text-foreground font-medium">
+              {TOPIC_LABELS[booking.topic]}
+            </span>
           </p>
 
           <span className="text-muted-foreground mt-2 inline-flex items-center gap-1.5 text-xs font-semibold">
@@ -72,19 +90,14 @@ function CallCard({
             {MEETING_TYPE_LABELS[booking.meetingType]}
           </span>
         </div>
+
+        {/* From sm up the actions join the same row and sit at the far end,
+            so a wide card reads as one continuous line of information
+            rather than leaving a dead zone beside right-aligned content. */}
+        <div className="hidden shrink-0 items-center gap-2.5 sm:flex">{actions}</div>
       </div>
 
-      <div className="mt-3.5 flex gap-2.5">
-        <Button variant="outline" size="sm" onClick={onOpen} className="flex-1 sm:flex-none">
-          פרטי השיחה
-        </Button>
-        {booking.meetingType === "google_meet" && booking.status === "scheduled" ? (
-          <Button size="sm" className="flex-1 sm:flex-none">
-            <Video aria-hidden />
-            הצטרף
-          </Button>
-        ) : null}
-      </div>
+      <div className="mt-3.5 flex gap-2.5 sm:hidden">{actions}</div>
     </article>
   );
 }

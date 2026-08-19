@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarCheck2, MessagesSquare } from "lucide-react";
+import { CalendarCheck2, Clock3, MessagesSquare } from "lucide-react";
 
 import { CallCard } from "@/components/doctor/call-card";
 import { CallDetailsDialog } from "@/components/doctor/call-details-dialog";
@@ -73,13 +73,17 @@ export default function DoctorCallsPage() {
     return sorted.filter((b) => b.status !== "scheduled");
   }, [bookings, tab, today]);
 
-  const todayScheduled = useMemo(
-    () => bookings?.filter((b) => b.date === today && b.status === "scheduled") ?? [],
+  const todayAll = useMemo(
+    () => bookings?.filter((b) => b.date === today) ?? [],
     [bookings, today]
   );
+  const todayScheduled = useMemo(
+    () => todayAll.filter((b) => b.status === "scheduled"),
+    [todayAll]
+  );
   const todayDone = useMemo(
-    () => bookings?.filter((b) => b.date === today && b.status === "completed") ?? [],
-    [bookings, today]
+    () => todayAll.filter((b) => b.status === "completed"),
+    [todayAll]
   );
 
   const openBooking = useMemo(
@@ -95,7 +99,7 @@ export default function DoctorCallsPage() {
   );
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pt-7 pb-14 sm:px-6 sm:pt-9">
+    <main className="mx-auto w-full max-w-2xl px-4 pt-7 sm:px-6 sm:pt-9">
       <header className="mb-5">
         <p className="text-muted-foreground text-sm">{formatHebrewDate(today)}</p>
         <h1 className="text-foreground mt-0.5 text-2xl font-extrabold sm:text-3xl">
@@ -111,14 +115,10 @@ export default function DoctorCallsPage() {
 
       {!hasPublishedToday ? <ReminderBanner /> : null}
 
-      <div className="mb-5 grid grid-cols-3 gap-2.5">
-        <SummaryTile label="היום" value={todayScheduled.length} icon={MessagesSquare} />
+      <div className="border-border bg-card shadow-card mb-5 grid grid-cols-3 rounded-xl border [&>*+*]:border-s [&>*+*]:border-border">
+        <SummaryTile label="סה״כ היום" value={todayAll.length} icon={MessagesSquare} />
         <SummaryTile label="הושלמו" value={todayDone.length} icon={CalendarCheck2} />
-        <SummaryTile
-          label="נותרו"
-          value={todayScheduled.length}
-          icon={MessagesSquare}
-        />
+        <SummaryTile label="נותרו" value={todayScheduled.length} icon={Clock3} />
       </div>
 
       <div
@@ -198,7 +198,7 @@ function SummaryTile({
   icon: typeof MessagesSquare;
 }) {
   return (
-    <div className="border-border bg-card shadow-card rounded-lg border px-3 py-3">
+    <div className="px-3.5 py-3">
       <span className="text-muted-foreground flex items-center gap-1.5 text-xs font-semibold">
         <Icon className="size-3.5" aria-hidden />
         {label}

@@ -33,6 +33,13 @@ export interface Doctor {
   /** Hebrew specialty label, e.g. "רפואה פנימית". */
   specialty: string;
   departmentId: string;
+  /**
+   * Profile picture as a data URL. Optional — doctors fall back to their
+   * initials. Stored downscaled (see components/doctor/avatar-picker.tsx)
+   * because the whole store round-trips through localStorage, which has
+   * only a few megabytes of quota for everything.
+   */
+  avatarDataUrl?: string;
 }
 
 /**

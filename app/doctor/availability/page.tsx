@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { formatHebrewDate, todayIso } from "@/lib/format";
 import { listSlotsForDoctor, setDayAvailability } from "@/lib/store/api";
 import { useCurrentDoctorId, useStoreState } from "@/lib/store/context";
-import { cn } from "@/lib/utils";
 import type { AvailabilitySlot } from "@/types";
 
 /** A realistic ward day at 15-minute granularity. */
@@ -132,7 +131,7 @@ export default function DoctorAvailabilityPage() {
   const selectedCount = selected.size;
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 pt-7 pb-32 sm:px-6 sm:pt-9 md:pb-14">
+    <main className="mx-auto w-full max-w-2xl px-4 pt-7 sm:px-6 sm:pt-9">
       <header className="mb-5">
         <p className="text-muted-foreground text-sm">{formatHebrewDate(today)}</p>
         <h1 className="text-foreground mt-0.5 text-2xl font-extrabold sm:text-3xl">
@@ -203,17 +202,10 @@ export default function DoctorAvailabilityPage() {
         </p>
       </section>
 
-      {/* Sticky on phones so the primary action is always reachable without
-          scrolling back past 40 slots. */}
-      <div
-        className={cn(
-          "bg-background/92 fixed inset-x-0 bottom-20 z-30 border-t px-4 py-3 backdrop-blur",
-          "border-border md:static md:mt-5 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
-        )}
-      >
+      <div className="mt-5">
         <Button
           onClick={() => void publish()}
-          className="w-full md:w-auto md:min-w-52"
+          className="w-full sm:w-auto sm:min-w-52"
           size="lg"
         >
           פרסם זמינות
