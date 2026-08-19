@@ -56,6 +56,24 @@ Slow down and review line by line whenever the change touches:
 - **sensitive user information** — medical, identity, and contact data: encryption at
   rest and in transit, redaction in logs and error reports, retention
 
+## Visual review (UI changes)
+
+For any change that affects the interface, review the **rendered result**, not only the
+source. Ask the manager for screenshots at mobile and desktop widths, or capture them
+yourself from the running application, and judge:
+
+- spacing, rhythm, and visual hierarchy
+- typography scale and weight consistency
+- responsive behavior at both widths, including overflow and cramped layouts
+- RTL correctness on every screen — mirrored layout, flipped directional icons, and
+  times/numerals that read correctly inside right-to-left text
+- empty, loading, hover, focus, selected, and error states
+- animation consistency and restraint
+
+Explicitly flag anything that reads as **generic, unfinished, inconsistent, overly
+dense, visually flat, or confusing**. Those are blocking issues for a product that is
+meant to feel polished, not cosmetic nitpicks.
+
 ## Feedback rules
 
 - Be **specific and actionable**: `file:line`, what is wrong, why it matters, and the
