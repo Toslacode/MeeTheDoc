@@ -6,23 +6,25 @@
    ground, white cards, deep navy ink, vivid clinical blue accent, and a
    dark navy navigation rail. Dark theme mirrors the same hierarchy.   */
 :root{
-  --bg:#F5F7FA; --bg-2:#EDF1F6;
-  --surface:#FFFFFF; --surface-2:#F7F9FC; --surface-3:#EEF2F7;
-  --border:#E4E9F0; --border-2:#D3DBE6;
-  --ink:#16243B; --ink-2:#3B4B63; --ink-dim:#64748B; --ink-faint:#93A1B4;
-  --accent:#2563EB; --accent-ink:#FFFFFF; --accent-soft:#EFF5FF; --accent-line:#BFD6FE;
-  --rail:#1E2A44; --rail-2:#2E3E60; --rail-ink:#CBD5E6; --rail-dim:#8494B0;
-  --urgent:#DC2626; --urgent-soft:#FEF2F2; --urgent-line:#FBD5D5;
-  --warn:#D97706; --warn-soft:#FFF8EC; --warn-line:#FBE3B8;
-  --stable:#059669; --stable-soft:#ECFDF5; --stable-line:#B8E6D0;
-  --done:#64748B; --done-soft:#F1F5F9;
+  /* warm ivory ground, cards a warm off-white step lighter, cool-grey
+     structure, clinical blue reserved for actions */
+  --bg:#F5F2EA; --bg-2:#EDE8DC;
+  --surface:#FFFDF9; --surface-2:#F8F5EE; --surface-3:#F0EBE0;
+  --border:#E6DFD1; --border-2:#D6CDBA;
+  --ink:#1B2637; --ink-2:#41506A; --ink-dim:#6B7891; --ink-faint:#9AA3B2;
+  --accent:#2563EB; --accent-ink:#FFFFFF; --accent-soft:#EAF1FE; --accent-line:#BFD6FE;
+  --rail:#1D2739; --rail-2:#2C3A52; --rail-ink:#CBD5E6; --rail-dim:#8494B0;
+  --urgent:#C8372D; --urgent-soft:#FBEFEB; --urgent-line:#F2D2C9;
+  --warn:#B4761A; --warn-soft:#FBF3E2; --warn-line:#EEDBB0;
+  --stable:#12805C; --stable-soft:#EAF4EC; --stable-line:#BFDFCB;
+  --done:#6B7891; --done-soft:#F0EDE5;
   --cc-strategy:#059669; --cc-tests:#2563EB; --cc-imaging:#0891B2; --cc-treatments:#7C3AED;
   --cc-meds:#C026D3;     --cc-consults:#EA580C; --cc-tasks:#4F46E5; --cc-documents:#0D9488;
   --cc-family:#CA8A04;   --cc-discharge:#DB2777; --cc-social:#65A30D; --cc-decisions:#DC2626;
-  --cc-tint:9%; --cc-edge:34%;
-  --shadow-sm:0 1px 2px rgba(22,36,59,.05);
-  --shadow:0 1px 3px rgba(22,36,59,.05), 0 6px 16px -8px rgba(22,36,59,.14);
-  --shadow-lg:0 22px 56px -20px rgba(22,36,59,.28), 0 2px 6px rgba(22,36,59,.06);
+  --cc-tint:6%; --cc-edge:20%;
+  --shadow-sm:0 1px 2px rgba(74,58,38,.06);
+  --shadow:0 1px 3px rgba(74,58,38,.06), 0 6px 16px -8px rgba(74,58,38,.16);
+  --shadow-lg:0 22px 56px -20px rgba(58,46,30,.26), 0 2px 6px rgba(74,58,38,.07);
   --r:14px;
   color-scheme:light;
 }
@@ -211,7 +213,7 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 .pt-ring{position:absolute;inset:-3px;border-radius:99px;border:2px solid;pointer-events:none}
 
 /* ============================ MODALS / TOAST ============================ */
-.modal-back{position:fixed;inset:0;background:rgba(15,23,35,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:200;animation:fade .18s ease}
+.modal-back{position:fixed;inset:0;background:rgba(38,30,20,.42);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;z-index:200;animation:fade .18s ease}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:pop .26s cubic-bezier(.2,.9,.3,1.1)}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
@@ -230,6 +232,84 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 @keyframes toastin{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:none}}
 .fade{animation:fadeup .26s cubic-bezier(.2,.9,.3,1)}
 @keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ==================== LOGIN (demo entry screen) ==================== */
+.lg{
+  position:relative;min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;
+  padding:32px 20px;overflow:hidden;background:var(--bg);
+}
+/* two slow blurred glows plus a faint node field — calm, not flashy */
+.lg-glow{position:absolute;border-radius:99px;pointer-events:none;filter:blur(70px);opacity:.5}
+.lg-glow.a{width:620px;height:620px;inset-inline-end:-160px;top:-200px;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 42%,transparent),transparent 70%);
+  animation:lgFloatA 26s ease-in-out infinite}
+.lg-glow.b{width:560px;height:560px;inset-inline-start:-150px;bottom:-190px;
+  background:radial-gradient(circle,color-mix(in srgb,var(--cc-imaging) 38%,transparent),transparent 70%);
+  animation:lgFloatB 32s ease-in-out infinite}
+@keyframes lgFloatA{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-46px,54px,0) scale(1.09)}}
+@keyframes lgFloatB{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(52px,-42px,0) scale(1.12)}}
+.lg-nodes{position:absolute;inset:0;pointer-events:none;opacity:.5}
+.lg-nodes i{
+  position:absolute;width:4px;height:4px;border-radius:99px;
+  background:color-mix(in srgb,var(--accent) 55%,transparent);
+  animation:lgDrift 20s ease-in-out infinite;
+}
+@keyframes lgDrift{0%,100%{transform:translateY(0);opacity:.25}50%{transform:translateY(-26px);opacity:.75}}
+.lg-grid{
+  position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse at 50% 45%,#000 0%,transparent 72%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 0%,transparent 72%);
+}
+.lg-inner{position:relative;z-index:2;width:100%;max-width:410px;animation:lgIn .6s cubic-bezier(.2,.9,.3,1) both}
+@keyframes lgIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
+.lg-brand{display:flex;flex-direction:column;align-items:center;gap:11px;margin-bottom:22px;text-align:center}
+.lg-mark{
+  width:78px;height:78px;border-radius:23px;overflow:hidden;box-shadow:var(--shadow-lg);
+  animation:lgMark 5.5s ease-in-out infinite;
+}
+.lg-mark img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes lgMark{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.lg-name{font-size:31px;font-weight:800;letter-spacing:-.045em;line-height:1}
+.lg-tag{font-size:13px;color:var(--ink-dim);font-weight:600;letter-spacing:-.005em}
+.lg-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;
+  box-shadow:var(--shadow-lg);backdrop-filter:blur(6px);
+}
+.lg-roles{display:flex;gap:6px;margin-bottom:15px}
+.lg-role{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--ink-dim);
+  font-size:11.5px;font-weight:700;transition:all .18s cubic-bezier(.2,.9,.3,1.1);
+}
+.lg-role:hover{border-color:var(--border-2);color:var(--ink);transform:translateY(-1px)}
+.lg-role.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.lg-f{margin-bottom:12px;animation:lgIn .5s cubic-bezier(.2,.9,.3,1) both}
+.lg-f label{display:block;font-size:11.5px;font-weight:700;color:var(--ink-dim);margin-bottom:5px}
+.lg-f .wrap{display:flex;align-items:center;gap:9px;padding:11px 12px;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface-2);transition:border-color .18s,box-shadow .18s}
+.lg-f .wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.lg-f .wrap svg{color:var(--ink-faint)}
+.lg-f input{flex:1;min-width:0;border:none;background:none;outline:none;color:var(--ink);font-size:13.5px}
+.lg-btn{
+  width:100%;padding:12px;border-radius:12px;font-size:14px;font-weight:800;
+  background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);
+  box-shadow:0 8px 20px -9px var(--accent);
+  transition:transform .14s cubic-bezier(.2,.9,.3,1.3),filter .16s,box-shadow .16s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.lg-btn:hover{filter:brightness(1.07);transform:translateY(-2px);box-shadow:0 12px 26px -9px var(--accent)}
+.lg-btn:active{transform:translateY(0) scale(.985)}
+.lg-btn.ghost{
+  background:transparent;color:var(--ink-2);border-color:var(--border-2);box-shadow:none;
+  margin-top:9px;font-weight:700;font-size:13px;
+}
+.lg-btn.ghost:hover{background:var(--surface-2);color:var(--ink);box-shadow:none;transform:translateY(-1px)}
+.lg-foot{margin-top:16px;text-align:center;font-size:10.5px;color:var(--ink-faint);font-weight:600;line-height:1.6}
+.lg-out{animation:lgOut .34s cubic-bezier(.4,0,1,1) both}
+@keyframes lgOut{to{opacity:0;transform:scale(1.03)}}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
 
 /* ==================== PATIENT CANVAS (priority 1) ==================== */
@@ -268,26 +348,33 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 
 #mindmap{position:relative;min-height:100%}
 #mmSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
-#mmSvg path{fill:none;stroke-width:2;opacity:.7;stroke-linecap:round}
-#mmSvg path.hot{stroke-width:3.2;opacity:1}
+#mmSvg path{fill:none;stroke-width:1.1;opacity:.34;stroke-linecap:round;transition:stroke-width .2s,opacity .2s}
+#mmSvg path.hot{stroke-width:2;opacity:.9}
 .mm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;position:relative;z-index:1;align-items:start}
-.mm-hub{grid-column:2 / span 2;grid-row:2 / span 2;align-self:stretch;display:flex;align-items:center;justify-content:center;min-height:290px;padding:8px}
+.mm-hub{grid-column:2 / span 2;grid-row:2 / span 2;align-self:stretch;display:flex;align-items:center;justify-content:center;min-height:340px;padding:26px}
 /* the patient is a circle at the centre — the strongest object on screen */
 .hub{
-  width:210px;height:210px;border-radius:99px;position:relative;flex:none;
+  width:236px;height:236px;border-radius:99px;position:relative;flex:none;
   background:var(--surface);border:3px solid var(--accent-line);box-shadow:var(--shadow-lg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   transition:transform .3s cubic-bezier(.2,.9,.3,1.1),border-color .3s,box-shadow .3s;
 }
-#mindmap.dragging .hub{transform:scale(1.03);border-color:var(--accent);box-shadow:0 0 0 8px var(--accent-soft),var(--shadow-lg)}
-.hub .pt{position:absolute;inset:8px;border-radius:99px}
-.hub-txt{
-  position:absolute;inset-inline:6px;bottom:14px;display:flex;flex-direction:column;align-items:center;gap:1px;
-  background:linear-gradient(to top,var(--surface) 58%,transparent);padding-top:24px;border-radius:0 0 99px 99px;
+/* soft halo, not a hard ring — keeps the patient dominant without shouting */
+.hub::before{
+  content:"";position:absolute;inset:-34px;border-radius:99px;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 16%,transparent) 0%,transparent 68%);
+  filter:blur(6px);
 }
-.hub-txt .n{font-size:17px;font-weight:800;letter-spacing:-.03em}
-.hub-txt .m{font-size:11.5px;color:var(--ink-dim);font-weight:600}
-.hub-pill{position:absolute;bottom:-13px;inset-inline:0;display:flex;justify-content:center}
+#mindmap.dragging .hub{transform:scale(1.03);border-color:var(--accent);box-shadow:0 0 0 8px var(--accent-soft),var(--shadow-lg)}
+.hub .pt{position:absolute;inset:9px;border-radius:99px}
+.hub-txt{
+  position:absolute;inset-inline:6px;bottom:16px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:linear-gradient(to top,var(--surface) 62%,transparent);padding-top:28px;border-radius:0 0 99px 99px;
+}
+.hub-txt .n{font-size:19.5px;font-weight:800;letter-spacing:-.035em;line-height:1.1}
+.hub-txt .m{font-size:12px;color:var(--ink-dim);font-weight:600;display:flex;align-items:center;gap:6px}
+.hub-txt .m i{width:3px;height:3px;border-radius:99px;background:var(--ink-faint);display:block}
+.hub-pill{position:absolute;bottom:-14px;inset-inline:0;display:flex;justify-content:center}
 
 /* category card — tinted header, count badge, item list, footer link */
 .catcard{
@@ -302,22 +389,25 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
   border-bottom:1px solid color-mix(in srgb,var(--cc) 18%,var(--border));
 }
 .cat-head .ci{color:var(--cc);flex:none}
-.cat-title{font-size:13px;font-weight:800;flex:1;min-width:0;line-height:1.2;color:var(--cc)}
+.cat-title{font-size:13px;font-weight:700;flex:1;min-width:0;line-height:1.2;color:var(--ink)}
 .cat-count{
   font-size:12px;font-weight:800;min-width:24px;height:22px;padding:0 6px;border-radius:7px;
   display:flex;align-items:center;justify-content:center;flex:none;
-  background:color-mix(in srgb,var(--cc) 16%,var(--surface));color:var(--cc);
+  background:var(--surface-3);color:var(--ink-dim);
 }
-.cat-chev{color:var(--cc);opacity:.65;transition:transform .28s cubic-bezier(.2,.9,.3,1.1)}
+.cat-urg{width:7px;height:7px;border-radius:99px;background:var(--urgent);flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--urgent) 16%,transparent)}
+.cat-openN{font-size:10.5px;font-weight:700;color:var(--ink-faint);flex:none;white-space:nowrap}
+.cat-chev{color:var(--ink-faint);opacity:.8;transition:transform .28s cubic-bezier(.2,.9,.3,1.1)}
 .catcard.open .cat-chev{transform:rotate(180deg)}
 .cat-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.2,.9,.3,1)}
 .catcard.open .cat-body{grid-template-rows:1fr}
 .cat-body-inner{overflow:hidden}
 .cat-list{padding:5px 4px}
 .cat-item{
-  display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;width:100%;text-align:start;
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;width:100%;text-align:start;
   font-size:12.5px;font-weight:600;transition:background .14s;
 }
+.cat-item:not(:last-child){box-shadow:inset 0 -1px 0 var(--border)}
 .cat-item:hover{background:var(--surface-2)}
 .cat-item .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cat-item .stt{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;flex:none}
@@ -325,18 +415,34 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 .stt.warn{color:var(--ink-faint)} .stt.urgent{color:var(--urgent)}
 .cat-foot{
   display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;width:100%;
-  border-top:1px solid var(--border);font-size:12px;font-weight:700;color:var(--cc);
-  background:color-mix(in srgb,var(--cc) calc(var(--cc-tint) / 1.6),var(--surface));transition:background .15s;
+  border-top:1px solid var(--border);font-size:12px;font-weight:600;color:var(--ink-dim);
+  background:var(--surface-2);transition:background .15s,color .15s;
 }
-.cat-foot:hover{background:color-mix(in srgb,var(--cc) var(--cc-tint),var(--surface))}
+.cat-foot:hover{background:color-mix(in srgb,var(--cc) var(--cc-tint),var(--surface));color:var(--cc)}
 .cat-empty{font-size:12px;color:var(--ink-faint);padding:8px 9px;line-height:1.45}
+/* Treatment Strategy is the one card that keeps full colour weight — it
+   answers "what are we trying to achieve", not just "what did we do". */
+.catcard[data-cat="strategy"]{
+  border-color:color-mix(in srgb,var(--cc) 38%,var(--border));
+  box-shadow:var(--shadow-sm),0 10px 22px -12px color-mix(in srgb,var(--cc) 42%,transparent);
+}
+.catcard[data-cat="strategy"] .cat-head{
+  background:linear-gradient(160deg,color-mix(in srgb,var(--cc) 14%,var(--surface)),color-mix(in srgb,var(--cc) 5%,var(--surface)));
+}
+.catcard[data-cat="strategy"] .cat-title{font-size:14px;font-weight:800;color:var(--cc)}
+.catcard[data-cat="strategy"] .cat-count{background:var(--cc);color:#fff}
 .cat-goal{font-size:12px;color:var(--ink-2);padding:8px 11px 0;line-height:1.5}
 .cat-goal b{display:block;font-size:10.5px;color:var(--ink-faint);font-weight:700;margin-bottom:2px}
 .cat-bar{padding:8px 11px 10px;display:flex;align-items:center;gap:8px}
 .cat-bar .progress{flex:1}
 .cat-bar .pc{font-size:12.5px;font-weight:800;color:var(--cc)}
 
-.catcard.dropok{border-color:var(--cc);box-shadow:0 0 0 3px color-mix(in srgb,var(--cc) 22%,transparent),var(--shadow);animation:breathe 1.4s ease-in-out infinite}
+.catcard.dropok{border-color:var(--cc);box-shadow:0 0 0 3px color-mix(in srgb,var(--cc) 22%,transparent),var(--shadow);animation:breathe 1.4s ease-in-out infinite;position:relative}
+.catcard.dropok::after{
+  content:"שחרר כאן";position:absolute;top:6px;inset-inline-start:6px;z-index:4;pointer-events:none;
+  font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;
+  background:var(--cc);color:#fff;box-shadow:var(--shadow);animation:fadeup .2s ease;
+}
 .catcard.dropover{border-color:var(--cc);box-shadow:0 0 0 5px color-mix(in srgb,var(--cc) 30%,transparent),var(--shadow-lg);transform:translateY(-3px) scale(1.02)}
 .catcard.dimmed{opacity:.36}
 @keyframes breathe{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--cc) 20%,transparent),var(--shadow)}50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--cc) 26%,transparent),var(--shadow)}}
@@ -376,7 +482,7 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 }
 .titem:hover{border-color:var(--cc);background:color-mix(in srgb,var(--cc) var(--cc-tint),var(--surface));transform:translateY(-1px);box-shadow:var(--shadow)}
 .titem:active{cursor:grabbing}
-.titem.drag{opacity:.3;transform:scale(.95) rotate(-2deg)}
+.titem.drag{opacity:.62;transform:scale(1.035) rotate(-1deg);box-shadow:var(--shadow-lg);border-color:var(--cc);z-index:5}
 .titem .grip{color:var(--ink-faint);flex:none}
 .titem .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* the quick-add stays visible: a hover-only control is invisible to an audience */
@@ -451,11 +557,12 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 .tl-ev .eh{display:flex;align-items:center;gap:4px}
 .tl-ev .etm{font-size:9.5px;font-weight:700;color:var(--cc);font-family:"JetBrains Mono",monospace}
 .tl-ev .eic{color:var(--cc);margin-inline-start:auto;opacity:.8}
+.tl-ev .edep{color:var(--cc);opacity:.6;display:flex}
 .tl-ev .et{font-size:10.5px;margin-top:1px;font-weight:700;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tl-ev.blocked{border-style:dashed;background:var(--surface-2)}
 .tl-ev.sel{box-shadow:0 0 0 2px var(--accent),var(--shadow);z-index:7}
 #depSvg{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:visible}
-#depSvg path{fill:none;stroke-width:1.3;stroke-dasharray:4 3;opacity:.75}
+#depSvg path{fill:none;stroke-width:1.1;stroke-dasharray:4 3;opacity:.5}
 .legend{display:flex;flex-wrap:wrap;gap:7px;padding:10px 13px;border-top:1px solid var(--border)}
 .legend span{
   display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3.5px 9px;border-radius:99px;
@@ -631,6 +738,9 @@ const P={
   lung:'M12 4v8M9 12c0-3-1.5-4.5-3-4.5S3.5 9 3.5 12v3c0 2.5 1 4 3 4s2.5-1.5 2.5-3.5V12ZM15 12c0-3 1.5-4.5 3-4.5S20.5 9 20.5 12v3c0 2.5-1 4-3 4S15 17.5 15 15.5V12Z',
   hand:'M8 11V6.5a1.6 1.6 0 0 1 3.2 0V11m0-1.5a1.6 1.6 0 0 1 3.2 0V11m0-1a1.6 1.6 0 0 1 3.2 0v4.5a5.5 5.5 0 0 1-5.5 5.5H11a6 6 0 0 1-6-6V11a1.6 1.6 0 0 1 3-.8',
   list:'M8 6.5h12M8 12h12M8 17.5h12M4 6.5h.01M4 12h.01M4 17.5h.01',
+  mail:'M3.5 6.5h17v11h-17zM3.5 7l8.5 6 8.5-6',
+  lock:'M7 10.5V8a5 5 0 0 1 10 0v2.5M5.5 10.5h13a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1ZM12 15v2',
+  logout:'M9 8.5V6a1.5 1.5 0 0 1 1.5-1.5h8A1.5 1.5 0 0 1 20 6v12a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 9 18v-2.5M14.5 12H4M4 12l3-3M4 12l3 3',
 };
 function ic(n,s=18,cls=''){
   const d=P[n]||P.canvas;
@@ -667,8 +777,28 @@ Object.entries(CATS).forEach(([k,c])=>{c.c=`var(--cc-${k})`});
 const CAT_ORDER=['tests','strategy','treatments','consults','imaging','meds','tasks','discharge','documents','family','social','decisions'];
 
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-const DATES=['18/5','19/5','20/5','21/5','22/5','23/5','24/5'];
-const TODAY=1;                       /* שני 19/5 in the reference week */
+const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+/* The demo week is derived from the real clock, so the calendar always reads
+   as "today" on the day of the presentation rather than a fixed date. */
+const TODAY=new Date().getDay();                       /* 0 = Sunday, matching DAYS */
+const WEEK=(()=>{
+  const t=new Date(); t.setHours(0,0,0,0);
+  const sunday=new Date(t); sunday.setDate(t.getDate()-TODAY);
+  return Array.from({length:7},(_,i)=>{const d=new Date(sunday);d.setDate(sunday.getDate()+i);return d});
+})();
+const DATES=WEEK.map(d=>d.getDate()+'/'+(d.getMonth()+1));
+/* relative label where one reads naturally, weekday name otherwise */
+const DAY_LABEL=i=>i===TODAY?'היום':i===TODAY-1?'אתמול':i===TODAY+1?'מחר':DAYS[i];
+/* keeps seeded offsets inside the visible week whatever weekday we present on */
+const dayIdx=off=>Math.min(6,Math.max(0,TODAY+off));
+const WEEK_LABEL=(()=>{
+  const a=WEEK[0], b=WEEK[6], mo=MONTHS[b.getMonth()];
+  const span=a.getMonth()===b.getMonth()
+    ? `${a.getDate()} – ${b.getDate()} ב${mo}`
+    : `${a.getDate()} ב${MONTHS[a.getMonth()]} – ${b.getDate()} ב${mo}`;
+  const wk=Math.ceil(((WEEK[0]-new Date(WEEK[0].getFullYear(),0,1))/86400000+1)/7);
+  return {span,wk};
+})();
 const DEMO_NOW_MIN=9*60+15;          /* pinned so the "now" line always sits inside the data */
 
 const DATA={
@@ -727,27 +857,37 @@ const DATA={
 
   /* THE shared clinical entity */
   items:[
-    {id:uid(),p:'p1',cat:'tests',    t:'CBC',                  st:'done',    pr:'normal',who:'אחות דנה',  d:TODAY,time:'08:00',dur:30,dep:null,note:''},
-    {id:uid(),p:'p1',cat:'tests',    t:'CRP',                  st:'done',    pr:'normal',who:'אחות דנה',  d:TODAY,time:'08:00',dur:30,dep:null,note:'48 mg/L, ירידה מ-72'},
-    {id:uid(),p:'p1',cat:'tests',    t:'Blood Culture',        st:'warn',    pr:'high',  who:'אחות דנה',  d:TODAY,time:'07:00',dur:30,dep:null,note:'שתי מערכות'},
-    {id:uid(),p:'p1',cat:'imaging',  t:'CT חזה',               st:'progress',pr:'urgent',who:'ד״ר כהן',   d:TODAY,time:'14:00',dur:45,dep:null,note:'שלילת תסחיף ריאתי'},
-    {id:uid(),p:'p1',cat:'meds',     t:'אנטיביוטיקה IV',       st:'done',    pr:'high',  who:'אחות דנה',  d:TODAY,time:'09:00',dur:45,dep:null,note:'יום 3 מתוך 7'},
+    /* --- yesterday: admission day --- */
+    {id:uid(),p:'p1',cat:'documents',t:'מכתב קבלה',            st:'done',    pr:'normal',who:'ד״ר כהן',   d:dayIdx(-1),time:'09:30',dur:30,dep:null,note:''},
+    {id:uid(),p:'p1',cat:'tests',    t:'CBC',                  st:'done',    pr:'normal',who:'אחות דנה',  d:dayIdx(-1),time:'10:00',dur:30,dep:null,note:''},
+    {id:uid(),p:'p1',cat:'tests',    t:'CRP',                  st:'done',    pr:'normal',who:'אחות דנה',  d:dayIdx(-1),time:'10:00',dur:30,dep:null,note:'72 mg/L בקבלה'},
+    {id:uid(),p:'p1',cat:'imaging',  t:'צילום חזה',            st:'done',    pr:'high',  who:'ד״ר כהן',   d:dayIdx(-1),time:'11:30',dur:30,dep:null,note:'תסנין דו-צדדי בבסיסים'},
+    {id:uid(),p:'p1',cat:'meds',     t:'אנטיביוטיקה IV — מנה ראשונה',st:'done',pr:'urgent',who:'אחות דנה',d:dayIdx(-1),time:'13:00',dur:45,dep:null,note:'תוך שעה מהקבלה'},
+    {id:uid(),p:'p1',cat:'tests',    t:'Blood Culture',        st:'warn',    pr:'high',  who:'אחות דנה',  d:dayIdx(-1),time:'14:00',dur:30,dep:null,note:'שתי מערכות · תשובה תוך 48 שעות'},
+
+    /* --- today --- */
     {id:uid(),p:'p1',cat:'treatments',t:'חמצן 2 ליטר',         st:'progress',pr:'normal',who:'אחות דנה',  d:TODAY,time:'06:30',dur:90,dep:null,note:'סטורציה 94%'},
-    {id:uid(),p:'p1',cat:'tasks',    t:'ביקור רופאים',         st:'done',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'10:30',dur:45,dep:null,note:'מצב קליני יציב, משתפר'},
-    {id:uid(),p:'p1',cat:'tests',    t:'תוצאת CRP התקבלה',     st:'done',    pr:'normal',who:'מעבדה',     d:TODAY,time:'12:00',dur:30,dep:null,note:'48 mg/L (ירידה מ-72)'},
-    {id:uid(),p:'p1',cat:'consults', t:'ייעוץ קרדיולוגיה',     st:'warn',    pr:'high',  who:'ד״ר גולן',  d:TODAY,time:'16:00',dur:45,dep:null,note:''},
-    {id:uid(),p:'p1',cat:'decisions',t:'החלטה טיפולית',        st:'warn',    pr:'urgent',who:'ד״ר כהן',   d:TODAY,time:'18:00',dur:30,dep:null,note:'המשך אשפוז מול שחרור'},
-    {id:uid(),p:'p1',cat:'family',   t:'עדכון משפחה',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'19:30',dur:20,dep:null,note:'בת המשפחה: נועה'},
-    {id:uid(),p:'p1',cat:'discharge',t:'סקירת שחרור',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'14:00',dur:30,dep:null,note:'בהמתנה'},
-    {id:uid(),p:'p1',cat:'documents',t:'מכתב קבלה',            st:'done',    pr:'normal',who:'ד״ר כהן',   d:0,    time:'09:00',dur:30,dep:null,note:''},
-    {id:uid(),p:'p1',cat:'documents',t:'תוצאות מעבדה',         st:'done',    pr:'normal',who:'מעבדה',     d:TODAY,time:'12:30',dur:20,dep:null,note:''},
+    {id:uid(),p:'p1',cat:'tasks',    t:'ביקור רופאים',         st:'done',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'08:30',dur:45,dep:null,note:'מצב קליני יציב, משתפר'},
+    {id:uid(),p:'p1',cat:'meds',     t:'אנטיביוטיקה IV',       st:'done',    pr:'high',  who:'אחות דנה',  d:TODAY,time:'09:00',dur:45,dep:null,note:'יום 3 מתוך 7'},
     {id:uid(),p:'p1',cat:'documents',t:'סיכומי ביקור',         st:'done',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'11:30',dur:20,dep:null,note:''},
+    {id:uid(),p:'p1',cat:'tests',    t:'תוצאת CRP התקבלה',     st:'done',    pr:'normal',who:'מעבדה',     d:TODAY,time:'12:00',dur:30,dep:null,note:'48 mg/L (ירידה מ-72)'},
+    {id:uid(),p:'p1',cat:'documents',t:'תוצאות מעבדה',         st:'done',    pr:'normal',who:'מעבדה',     d:TODAY,time:'12:30',dur:20,dep:null,note:''},
+    {id:uid(),p:'p1',cat:'imaging',  t:'CT חזה',               st:'progress',pr:'urgent',who:'ד״ר כהן',   d:TODAY,time:'14:00',dur:45,dep:null,note:'שלילת תסחיף ריאתי'},
+    {id:uid(),p:'p1',cat:'consults', t:'ייעוץ קרדיולוגיה',     st:'warn',    pr:'high',  who:'ד״ר גולן',  d:TODAY,time:'16:00',dur:45,dep:null,note:''},
+    {id:uid(),p:'p1',cat:'decisions',t:'החלטה טיפולית',        st:'urgent',  pr:'urgent',who:'ד״ר כהן',   d:TODAY,time:'18:00',dur:30,dep:null,note:'המשך אשפוז מול שחרור'},
+    {id:uid(),p:'p1',cat:'family',   t:'עדכון משפחה',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'19:30',dur:20,dep:null,note:'בת המשפחה: נועה'},
+
+    /* --- tomorrow: planned --- */
+    {id:uid(),p:'p1',cat:'discharge',t:'סקירת שחרור',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:dayIdx(1),time:'09:00',dur:30,dep:null,note:'בהמתנה להחלטה טיפולית'},
+    {id:uid(),p:'p1',cat:'meds',     t:'מעבר לטיפול אנטיביוטי פומי',st:'warn',pr:'high', who:'ד״ר כהן',   d:dayIdx(1),time:'10:00',dur:20,dep:null,note:'תנאי לשחרור'},
+    {id:uid(),p:'p1',cat:'treatments',t:'הערכת פיזיותרפיה נשימתית',st:'warn',pr:'normal',who:'פיזיותרפיה',d:dayIdx(1),time:'11:00',dur:40,dep:null,note:'לקראת גמילה מחמצן'},
+    {id:uid(),p:'p1',cat:'social',   t:'תיאום המשך טיפול בקהילה',st:'warn',  pr:'normal',who:'עו״ס רונית',d:dayIdx(1),time:'13:00',dur:45,dep:null,note:'רופא משפחה ואחות קהילה'},
 
     {id:uid(),p:'p2',cat:'consults', t:'ייעוץ קרדיולוגיה',     st:'warn',    pr:'high',  who:'ד״ר גולן',  d:TODAY,time:'10:00',dur:45,dep:null,note:'הערכה וטיפול תרופתי'},
     {id:uid(),p:'p2',cat:'meds',     t:'משתן IV',              st:'progress',pr:'high',  who:'אחות מיכל',d:TODAY,time:'08:00',dur:30,dep:null,note:'מעקב מאזן'},
     {id:uid(),p:'p2',cat:'tests',    t:'Creatinine',           st:'done',    pr:'normal',who:'אחות מיכל',d:TODAY,time:'06:00',dur:20,dep:null,note:''},
     {id:uid(),p:'p2',cat:'tasks',    t:'שקילה יומית',          st:'progress',pr:'normal',who:'אחות מיכל',d:TODAY,time:'06:30',dur:15,dep:null,note:''},
-    {id:uid(),p:'p2',cat:'imaging',  t:'אקו לב',               st:'warn',    pr:'high',  who:'ד״ר גולן',  d:TODAY+1,time:'09:30',dur:45,dep:null,note:'הערכת EF'},
+    {id:uid(),p:'p2',cat:'imaging',  t:'אקו לב',               st:'warn',    pr:'high',  who:'ד״ר גולן',  d:dayIdx(1),time:'09:30',dur:45,dep:null,note:'הערכת EF'},
     {id:uid(),p:'p3',cat:'meds',     t:'אנטיביוטיקה פומית',    st:'progress',pr:'normal',who:'אחות דנה',  d:TODAY,time:'08:00',dur:20,dep:null,note:'יום 2 מתוך 5'},
     {id:uid(),p:'p3',cat:'discharge',t:'סקירת שחרור',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'11:30',dur:30,dep:null,note:''},
     {id:uid(),p:'p3',cat:'tests',    t:'תרבית שתן',            st:'done',    pr:'normal',who:'מעבדה',     d:TODAY,time:'06:00',dur:20,dep:null,note:'שלילית'},
@@ -762,7 +902,7 @@ const DATA={
 
     {id:uid(),p:'p6',cat:'meds',     t:'נוגד קרישה',           st:'progress',pr:'high',  who:'ד״ר גולן',  d:TODAY,time:'09:00',dur:20,dep:null,note:'מעקב קצב ולחץ דם'},
     {id:uid(),p:'p6',cat:'treatments',t:'ניטור הולטר',         st:'progress',pr:'normal',who:'אחות מיכל',d:TODAY,time:'08:00',dur:120,dep:null,note:'24 שעות'},
-    {id:uid(),p:'p6',cat:'discharge',t:'תיאום המשך טיפול',     st:'warn',    pr:'normal',who:'עו״ס רונית',d:TODAY+1,time:'10:00',dur:30,dep:null,note:''},
+    {id:uid(),p:'p6',cat:'discharge',t:'תיאום המשך טיפול',     st:'warn',    pr:'normal',who:'עו״ס רונית',d:dayIdx(1),time:'10:00',dur:30,dep:null,note:''},
   ],
 
   /* all-day monitoring band, as in the timeline reference */
@@ -793,14 +933,18 @@ const DATA={
   const g=(p,t)=>DATA.items.find(i=>i.p===p&&i.t===t);
   const ct=g('p1','CT חזה'), con=g('p1','ייעוץ קרדיולוגיה'), dec=g('p1','החלטה טיפולית'),
         fam=g('p1','עדכון משפחה'), dis=g('p1','סקירת שחרור'), ab=g('p1','אנטיביוטיקה IV'),
-        vis=g('p1','ביקור רופאים'), crp=g('p1','תוצאת CRP התקבלה');
-  if(ab&&DATA.items[0]) ab.dep=DATA.items[0].id;
+        vis=g('p1','ביקור רופאים'), crp=g('p1','תוצאת CRP התקבלה'),
+        cbc=g('p1','CBC'), xr=g('p1','צילום חזה'), po=g('p1','מעבר לטיפול אנטיביוטי פומי');
+  /* admission workup → first review → result → imaging → consult → decision → discharge */
+  if(ab&&cbc) ab.dep=cbc.id;
   if(vis&&ab) vis.dep=ab.id;
   if(crp&&vis) crp.dep=vis.id;
+  if(ct&&xr) ct.dep=xr.id;
   if(con&&ct) con.dep=ct.id;
   if(dec&&con) dec.dep=con.id;
   if(fam&&dec) fam.dep=dec.id;
-  if(dis&&ct) dis.dep=ct.id;
+  if(po&&dec) po.dep=dec.id;
+  if(dis&&po) dis.dep=po.id;
   const echo=g('p2','אקו לב'), cons2=g('p2','ייעוץ קרדיולוגיה');
   if(echo&&cons2) echo.dep=cons2.id;
 })();
@@ -820,8 +964,9 @@ const TOOLBOX=[
 ];
 
 const state={
+  authed:false, loginRole:'physician',
   theme:'light', role:'physician', view:'home', pid:'p1',
-  open:{strategy:true,tests:true,imaging:true,tasks:true},
+  open:{strategy:true,tests:true,imaging:true,treatments:true,tasks:true},
   tbOpen:{tests:true}, tbCollapsed:false, tbQuery:'',
   search:'', plQuery:'', tlRange:'week', tlSel:null, drag:null,
   chat:[{from:'bot',text:'שלום ד״ר כהן. אני העוזר הקליני של RoboTask — אפשר לשאול על מטופל, לבקש סיכום מצב או ליצור משימה.'}],
@@ -895,8 +1040,88 @@ const SUBTABS=[['timeline','ציר זמן'],['canvas','קנבס מטופל'],['t
 function render(){
   if(state.theme==='auto') document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme',state.theme);
+  /* demo entry gate — the login screen replaces the shell until you enter */
+  if(!state.authed){
+    document.getElementById('app').innerHTML=loginScreen();
+    bindLogin();
+    return;
+  }
   document.getElementById('app').innerHTML=shell();
   bind(); afterPaint();
+}
+
+/* =====================================================================
+   LOGIN — demo only. No authentication, no backend, no validation gate.
+   ===================================================================== */
+const LOGIN_ROLES=[['physician','users','רופא/ה'],['nurse','nurse','אח/ות'],['manager','chart','מנהל/ת']];
+function loginScreen(){
+  const nodes=[[12,22],[26,68],[41,14],[58,80],[72,32],[84,58],[19,45],[66,10],[92,78],[8,86],[48,50],[78,20]];
+  return `<div class="lg" id="lgRoot">
+    <div class="lg-grid"></div>
+    <div class="lg-glow a"></div>
+    <div class="lg-glow b"></div>
+    <div class="lg-nodes">
+      ${nodes.map(([x,y],i)=>`<i style="inset-inline-start:${x}%;top:${y}%;animation-delay:${(i*1.6).toFixed(1)}s;animation-duration:${18+(i%5)*3}s"></i>`).join('')}
+    </div>
+    <div class="lg-inner">
+      <div class="lg-brand">
+        <div class="lg-mark"><img src="${BRAND_ICON}" alt="RoboTask"></div>
+        <div>
+          <div class="lg-name">RoboTask</div>
+          <div class="lg-tag" dir="ltr">Treat as a Patient. Manage as a Project.</div>
+        </div>
+      </div>
+      <form class="lg-card" id="lgForm">
+        <div class="lg-f" style="animation-delay:.10s">
+          <label>כניסה בתפקיד</label>
+          <div class="lg-roles">
+            ${LOGIN_ROLES.map(([k,i,l])=>`<button type="button" class="lg-role ${state.loginRole===k?'on':''}" data-lgrole="${k}">${ic(i,17)}<span>${l}</span></button>`).join('')}
+          </div>
+        </div>
+        <div class="lg-f" style="animation-delay:.16s">
+          <label for="lgMail">כתובת דוא״ל</label>
+          <div class="wrap">${ic('mail',16)}<input id="lgMail" type="email" value="dr.cohen@hospital.org.il" autocomplete="username"></div>
+        </div>
+        <div class="lg-f" style="animation-delay:.22s">
+          <label for="lgPass">סיסמה</label>
+          <div class="wrap">${ic('lock',16)}<input id="lgPass" type="password" value="demo1234" autocomplete="current-password"></div>
+        </div>
+        <div class="lg-f" style="animation-delay:.28s;margin-bottom:0">
+          <button class="lg-btn" type="submit">${ic('logout',17)} התחבר</button>
+          <button class="lg-btn ghost" type="button" id="lgDemo">${ic('sparkles',15)} כניסה למצב הדגמה</button>
+        </div>
+      </form>
+      <div class="lg-foot">
+        מצב הדגמה · אין אימות אמיתי ואין נתוני מטופלים אמיתיים<br>
+        כל הנתונים במסך זה הם לצורכי הצגה בלבד
+      </div>
+    </div>
+  </div>`;
+}
+function bindLogin(){
+  const A=document.getElementById('app');
+  A.querySelectorAll('[data-lgrole]').forEach(b=>b.addEventListener('click',()=>{
+    state.loginRole=b.dataset.lgrole; render();
+  }));
+  const enter=()=>{
+    const root=document.getElementById('lgRoot');
+    const go=()=>{
+      state.authed=true;
+      state.role=state.loginRole;
+      state.view=NAV[state.role].items[0][0];
+      try{location.hash='#/app'}catch(_){}
+      render();
+      toast('ברוך הבא ל-RoboTask · '+NAV[state.role].label,'check2');
+    };
+    if(root){root.classList.add('lg-out'); setTimeout(go,300)} else go();
+  };
+  A.querySelector('#lgForm')?.addEventListener('submit',e=>{e.preventDefault();enter()});
+  A.querySelector('#lgDemo')?.addEventListener('click',enter);
+}
+function logout(){
+  state.authed=false;
+  try{location.hash='#/login'}catch(_){}
+  render();
 }
 function repaint(){document.getElementById('body').innerHTML=viewHtml();bind();afterPaint()}
 function afterPaint(){
@@ -923,6 +1148,7 @@ function shell(){
         <button class="${state.theme==='auto'?'active':''}" data-theme="auto" title="אוטומטי">${ic('monitor',13)}</button>
       </div>
       <button class="rail-item" data-nav="${state.role==='manager'?'automation':'home'}">${ic('gear',19)}<span>הגדרות</span></button>
+      <button class="rail-item" id="railOut" title="חזרה למסך הכניסה">${ic('logout',19)}<span>יציאה</span></button>
     </div>
   </aside>
   <main class="main">
@@ -1220,15 +1446,20 @@ function hub(p){
   const sw=statusWord(p);
   return `<div class="hub" id="hubEl">
     ${portrait(p,194)}
-    <div class="hub-txt"><div class="n">${esc(p.name)}</div><div class="m">חדר ${p.room} · ${p.age}</div></div>
+    <div class="hub-txt"><div class="n">${esc(p.name)}</div><div class="m"><span>חדר ${p.room}</span><i></i><span>${p.age}</span></div></div>
     <div class="hub-pill"><span class="pill ${p.status==='urgent'?'urgent':p.status==='warn'?'warn':'stable'}" style="background:var(--surface);box-shadow:var(--shadow)"><span class="dot"></span>${sw[0]}</span></div>
   </div>`;
 }
 
 function catCard(p,key){
-  const c=CATS[key], items=catItems(p.id,key), isOpen=!!state.open[key], d=state.drag;
+  const c=CATS[key], items=catItems(p.id,key), d=state.drag;
+  const hasUrgent=items.some(i=>i.st==='urgent');
+  /* Progressive disclosure: an explicit toggle wins; otherwise a category
+     opens itself only when it holds something urgent for this patient. */
+  const isOpen = key in state.open ? !!state.open[key] : hasUrgent;
   const cls=['catcard',isOpen?'open':'',d?(d.cat===key?'dropok':'dimmed'):''].join(' ');
   const cnt=key==='strategy'?p.progress+'%':items.length;
+  const openN=items.filter(i=>i.st!=='done').length;
 
   /* Strategy always shows its goal and progress — those are the card's whole
      point; only the sub-goals hide behind the expand, keeping it compact. */
@@ -1251,12 +1482,16 @@ function catCard(p,key){
     <button class="cat-head" data-toggle-cat="${key}">
       <span class="ci">${ic(c.icon,16)}</span>
       <span class="cat-title">${c.label}</span>
+      ${hasUrgent?'<span class="cat-urg" title="פריט דחוף"></span>':''}
+      ${!isOpen&&key!=='strategy'&&openN?`<span class="cat-openN">${openN} ${openN===1?'פתוח':'פתוחים'}</span>`:''}
       <span class="cat-count">${cnt}</span>
       <span class="cat-chev">${ic('chevron',14)}</span>
     </button>
     ${always}
-    <div class="cat-body"><div class="cat-body-inner">${body}</div></div>
-    <button class="cat-foot" data-catall="${key}">${ic('chevR',13)} ${c.all}</button>
+    <div class="cat-body"><div class="cat-body-inner">
+      ${body}
+      <button class="cat-foot" data-catall="${key}">${ic('chevR',13)} ${c.all}</button>
+    </div></div>
   </div>`;
 }
 
@@ -1356,7 +1591,7 @@ function layoutDay(items){
 }
 function vTimeline(){
   const p=P_(state.pid);
-  const days=state.tlRange==='day'?[TODAY]:state.tlRange==='3'?[TODAY,TODAY+1,TODAY+2].filter(d=>d<7):[0,1,2,3,4,5,6];
+  const days=state.tlRange==='day'?[TODAY]:state.tlRange==='3'?[...new Set([dayIdx(-1),TODAY,dayIdx(1)])]:[0,1,2,3,4,5,6];
   const items=itemsOf(p.id);
   const cats=[...new Set(items.map(i=>i.cat))];
   const chain=buildChain(items);
@@ -1369,7 +1604,7 @@ function vTimeline(){
       <div class="tl-bar">
         <button class="btn sm">${ic('filter',14)} סינון</button>
         <button class="iconbtn" style="width:30px;height:30px">${ic('gear',14)}</button>
-        <div class="tl-week" style="margin-inline:auto">שני 18 – 25 במאי<span>שבוע 21</span></div>
+        <div class="tl-week" style="margin-inline:auto">${WEEK_LABEL.span}<span>שבוע ${WEEK_LABEL.wk}</span></div>
         <div class="seg">
           <button class="${state.tlRange==='day'?'active':''}" data-range="day">יום</button>
           <button class="${state.tlRange==='week'?'active':''}" data-range="week">שבוע</button>
@@ -1381,7 +1616,7 @@ function vTimeline(){
         <div class="tl-grid" id="tlGrid" style="min-width:${52+days.length*(state.tlRange==='week'?126:210)}px">
           <div class="tl-head" style="grid-template-columns:${cols}">
             ${days.map(d=>`<div class="tl-dc ${d===TODAY?'today':''}">
-              <div class="dn">${d===TODAY?'היום':DAYS[d]}</div>
+              <div class="dn">${DAY_LABEL(d)}</div>
               <div class="dd mono">${DATES[d]}${d===TODAY?`<span class="tbadge">${openItems(p.id).filter(i=>i.d===d).length}</span>`:''}</div>
             </div>`).join('')}
             <div class="tl-gut"></div>
@@ -1446,6 +1681,7 @@ function vTimeline(){
     </aside>
   </div>`;
 }
+const crossDay=i=>{if(!i.dep)return false;const s=DATA.items.find(x=>x.id===i.dep);return !!s&&s.d!==i.d};
 function evBlock(ev){
   const i=ev.i, c=CATS[i.cat];
   const top=ev.s/60*ROW_H, h=Math.max(EV_MIN_PX,(ev.e-ev.s)/60*ROW_H);
@@ -1453,7 +1689,7 @@ function evBlock(ev){
   return `<button class="tl-ev ${state.tlSel===i.id?'sel':''} ${isBlocked(i)?'blocked':''}"
     data-openitem="${i.id}" data-ev="${i.id}"
     style="top:${top}px;height:${h}px;inset-inline-start:calc(${off}% + 3px);width:calc(${w}% - 6px);--cc:${c.c};opacity:${i.st==='done'?.72:1}">
-    <span class="eh"><span class="etm">${i.time}</span><span class="eic">${ic(c.icon,11)}</span></span>
+    <span class="eh"><span class="etm">${i.time}</span>${crossDay(i)?`<span class="edep" title="תלוי בפריט מיום אחר">${ic('chevR',10)}</span>`:''}<span class="eic">${ic(c.icon,11)}</span></span>
     <span class="et">${esc(i.t)}</span>
   </button>`;
 }
@@ -1479,8 +1715,15 @@ function drawDeps(){
     out+=`<marker id="ah${i.cat}" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">
       <path d="M1 1 L6 4 L1 7" fill="none" stroke="${CATS[i.cat].c}" stroke-width="1.4" stroke-linecap="round"/></marker>`}});
   out+='</defs>';
-  itemsOf(state.pid).forEach(i=>{
+  const items=itemsOf(state.pid);
+  items.forEach(i=>{
     if(!i.dep)return;
+    const src=items.find(x=>x.id===i.dep);
+    /* Only link within a day. A cross-day dependency drawn as a line would
+       sweep across the whole week and take the calendar over; those carry a
+       small inbound glyph on the event instead, and the full order is spelled
+       out in the "critical dependencies" panel. */
+    if(!src||src.d!==i.d)return;
     const a=pos(i.dep), b=pos(i.id); if(!a||!b)return;
     const col=CATS[i.cat].c, mid=(a.b+b.t)/2;
     out+=`<path stroke="${col}" marker-end="url(#ah${i.cat})"
@@ -1701,6 +1944,7 @@ function bind(){
   on('[data-theme]','click',e=>{state.theme=e.currentTarget.dataset.theme;render()});
   on('[data-nav]','click',e=>{state.view=e.currentTarget.dataset.nav;render()});
   on('[data-open]','click',e=>{state.pid=e.currentTarget.dataset.open;state.view='canvas';render()});
+  A.querySelector('#railOut')?.addEventListener('click',logout);
   A.querySelector('#bellBtn')?.addEventListener('click',()=>toast('3 התראות: תוצאת CT ממתינה, ייעוץ קרדיולוגיה פתוח, סקירת שחרור','bell'));
   A.querySelector('[data-newaction]')?.addEventListener('click',()=>{
     state.view='canvas'; state.tbCollapsed=false; render();
@@ -1742,8 +1986,26 @@ function bind(){
     paintTargets();
   });
   on('.titem','dragend',e=>{e.currentTarget.classList.remove('drag');state.drag=null;clearTargets()});
-  on('.catcard','dragover',e=>{if(!state.drag)return;e.preventDefault();e.dataTransfer.dropEffect='copy';e.currentTarget.classList.add('dropover')});
-  on('.catcard','dragleave',e=>e.currentTarget.classList.remove('dropover'));
+  /* dragenter must also be cancelled or the card never becomes a real drop
+     target, and the highlight would wait on a dragover tick that may not come */
+  const markTarget=e=>{
+    if(!state.drag)return false;
+    e.preventDefault();
+    const ok=e.currentTarget.dataset.cat===state.drag.cat;
+    if(e.dataTransfer) e.dataTransfer.dropEffect=ok?'copy':'move';
+    document.querySelectorAll('.catcard.dropover').forEach(c=>{if(c!==e.currentTarget)c.classList.remove('dropover')});
+    e.currentTarget.classList.toggle('dropover',ok);
+    return true;
+  };
+  on('.catcard','dragenter',markTarget);
+  on('.catcard','dragover',markTarget);
+  on('.catcard','dragleave',e=>{
+    /* dragleave also fires when the cursor crosses onto a child of the card,
+       so only drop the highlight once it has genuinely left the card */
+    const to=e.relatedTarget;
+    if(to&&e.currentTarget.contains(to))return;
+    e.currentTarget.classList.remove('dropover');
+  });
   on('.catcard','drop',e=>{
     e.preventDefault(); if(!state.drag)return;
     const dropped=e.currentTarget.dataset.cat, correct=state.drag.cat, title=state.drag.t;
@@ -1849,7 +2111,7 @@ function openSchedule(title,cat,droppedOn,routed){
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 11px">
       <div class="field"><label>תאריך</label><select id="fDay">
-        ${DAYS.map((d,i)=>`<option value="${i}" ${i===TODAY?'selected':''}>${d} ${DATES[i]}${i===TODAY?' (היום)':''}</option>`).join('')}</select></div>
+        ${DAYS.map((d,i)=>`<option value="${i}" ${i===TODAY?'selected':''}>${DAY_LABEL(i)} · ${DATES[i]}</option>`).join('')}</select></div>
       <div class="field"><label>שעה</label><input id="fTime" type="time" value="${nowHM()}"></div>
       <div class="field"><label>דחיפות</label><select id="fPr">
         ${Object.entries(PRIORITY).map(([k,v])=>`<option value="${k}" ${k==='normal'?'selected':''}>${v}</option>`).join('')}</select></div>
