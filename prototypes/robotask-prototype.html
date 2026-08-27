@@ -16,6 +16,10 @@
   --stable:#237F58; --stable-soft:#E3F3EA; --stable-line:#BDE0CC;
   --done:#78879A; --done-soft:#EEF0F3;
   --violet:#6B4FCE; --violet-soft:#EFEBFB;
+  --cc-strategy:#6B4FCE; --cc-tests:#1D5FE0; --cc-imaging:#0E93AE; --cc-treatments:#1F9D55;
+  --cc-meds:#B4761A; --cc-consults:#4F5FD8; --cc-tasks:#8A7A1E; --cc-documents:#6B6558;
+  --cc-family:#C2467E; --cc-discharge:#0E9F6E; --cc-social:#8B4FA8; --cc-decisions:#C93A38;
+  --cc-tint:13%;
   --shadow-sm:0 1px 2px rgba(30,26,18,.05);
   --shadow:0 1px 2px rgba(30,26,18,.04), 0 6px 18px -10px rgba(30,26,18,.22);
   --shadow-lg:0 24px 60px -22px rgba(24,32,45,.35), 0 2px 6px rgba(30,26,18,.06);
@@ -35,6 +39,10 @@
   --stable:#4FBE8B; --stable-soft:#13291F; --stable-line:#23472F;
   --done:#7B8A9C; --done-soft:#1B242F;
   --violet:#9B84F0; --violet-soft:#1D1930;
+  --cc-strategy:#a693e6; --cc-tests:#6c99f1; --cc-imaging:#28d2f5; --cc-treatments:#3ce183;
+  --cc-meds:#eba844; --cc-consults:#8e99eb; --cc-tasks:#dbc12e; --cc-documents:#a39881;
+  --cc-family:#df8ab0; --cc-discharge:#1bf3aa; --cc-social:#b889cf; --cc-decisions:#e28180;
+  --cc-tint:20%;
   --shadow-sm:0 1px 2px rgba(0,0,0,.4);
   --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 22px -12px rgba(0,0,0,.7);
   --shadow-lg:0 26px 64px -22px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.5);
@@ -53,6 +61,10 @@
   --stable:#4FBE8B; --stable-soft:#13291F; --stable-line:#23472F;
   --done:#7B8A9C; --done-soft:#1B242F;
   --violet:#9B84F0; --violet-soft:#1D1930;
+  --cc-strategy:#a693e6; --cc-tests:#6c99f1; --cc-imaging:#28d2f5; --cc-treatments:#3ce183;
+  --cc-meds:#eba844; --cc-consults:#8e99eb; --cc-tasks:#dbc12e; --cc-documents:#a39881;
+  --cc-family:#df8ab0; --cc-discharge:#1bf3aa; --cc-social:#b889cf; --cc-decisions:#e28180;
+  --cc-tint:20%;
   --shadow-sm:0 1px 2px rgba(0,0,0,.4);
   --shadow:0 1px 2px rgba(0,0,0,.35), 0 8px 22px -12px rgba(0,0,0,.7);
   --shadow-lg:0 26px 64px -22px rgba(0,0,0,.8), 0 2px 8px rgba(0,0,0,.5);
@@ -89,8 +101,11 @@ svg{display:block; flex:none}
 .brand{display:flex; align-items:center; gap:10px; padding:4px 6px 2px}
 .brand-mark{
   width:36px;height:36px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg,var(--accent),var(--accent-2)); color:#fff; box-shadow:var(--shadow);
+  overflow:hidden; box-shadow:var(--shadow);
+  background:linear-gradient(145deg,var(--accent),var(--accent-2)); color:#fff;
 }
+.brand-mark:has(img){background:var(--surface)}
+.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
 .brand-name{font-weight:800;font-size:17px;letter-spacing:-.03em;line-height:1.1}
 .brand-sub{font-size:10px;color:var(--ink-faint);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
 
@@ -233,7 +248,7 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);
 }
 .phead .name{font-size:19px;font-weight:800;letter-spacing:-.03em}
-.phead .facts{display:flex;flex-wrap:wrap;gap:0 14px;margin-top:3px;font-size:12px;color:var(--ink-dim);font-weight:600}
+.phead .facts{display:flex;flex-wrap:wrap;gap:2px 15px;margin-top:4px;font-size:12.5px;color:var(--ink-2);font-weight:600}
 .phead .facts span{display:inline-flex;align-items:center;gap:5px}
 .phead-divider{width:1px;align-self:stretch;background:var(--border);margin:2px 0}
 .phead-meta{display:flex;flex-direction:column;gap:4px;font-size:11.5px}
@@ -277,8 +292,8 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 .catcard:hover{border-color:var(--border-2);transform:translateY(-1px)}
 .cat-head{display:flex;align-items:center;gap:9px;padding:11px 12px 11px 13px;text-align:start;width:100%}
 .cat-ic{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--ccs);color:var(--cc)}
-.cat-title{font-size:12.5px;font-weight:700;line-height:1.2;flex:1;min-width:0}
-.cat-count{font-size:11px;font-weight:800;color:var(--ink-faint);background:var(--surface-3);border-radius:99px;padding:2px 7px;min-width:22px;text-align:center}
+.cat-title{font-size:13.5px;font-weight:700;line-height:1.25;flex:1;min-width:0}
+.cat-count{font-size:12px;font-weight:800;color:var(--ink-faint);background:var(--surface-3);border-radius:99px;padding:2px 7px;min-width:22px;text-align:center}
 .cat-chev{color:var(--ink-faint);transition:transform .28s cubic-bezier(.2,.9,.3,1.1)}
 .catcard.open .cat-chev{transform:rotate(180deg)}
 .cat-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.2,.9,.3,1)}
@@ -286,17 +301,17 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 .cat-body-inner{overflow:hidden}
 .cat-list{padding:0 12px 11px;display:flex;flex-direction:column;gap:5px}
 .cat-item{
-  display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:8px;background:var(--surface-2);
-  border:1px solid var(--border);font-size:11.5px;font-weight:600;text-align:start;width:100%;transition:background .15s;
+  display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:9px;background:var(--surface-2);
+  border:1px solid var(--border-2);font-size:12.5px;font-weight:600;text-align:start;width:100%;transition:background .15s,border-color .15s;
 }
-.cat-item:hover{background:var(--surface-3)}
+.cat-item:hover{background:var(--surface-3);border-color:var(--cc)}
 .cat-item .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cat-item .st{width:14px;height:14px;border-radius:99px;display:flex;align-items:center;justify-content:center;flex:none;font-size:9px;font-weight:800}
+.cat-item .st{width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;flex:none;font-size:10px;font-weight:800}
 .st.done{background:var(--stable-soft);color:var(--stable)}
 .st.progress{background:var(--accent-soft);color:var(--accent)}
 .st.warn{background:var(--warn-soft);color:var(--warn)}
 .st.urgent{background:var(--urgent-soft);color:var(--urgent)}
-.cat-empty{font-size:11px;color:var(--ink-faint);padding:2px 2px 6px}
+.cat-empty{font-size:12px;color:var(--ink-dim);padding:3px 2px 7px;line-height:1.45}
 
 .catcard.dropok{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),var(--shadow);animation:breathe 1.4s ease-in-out infinite}
 .catcard.dropover{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft),var(--shadow-lg);transform:translateY(-3px) scale(1.015)}
@@ -307,32 +322,32 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 
 /* Treatment Strategy is the strongest category on the canvas */
 .catcard[data-cat="strategy"]{
-  background:linear-gradient(170deg,var(--violet-soft) 0%,var(--surface) 62%);
-  border-color:color-mix(in srgb,var(--violet) 28%,var(--border));
+  background:linear-gradient(170deg,color-mix(in srgb,var(--cc-strategy) var(--cc-tint),var(--surface)) 0%,var(--surface) 62%);
+  border-color:color-mix(in srgb,var(--cc-strategy) 28%,var(--border));
 }
-.catcard[data-cat="strategy"] .cat-title{font-size:13px}
-.catcard[data-cat="strategy"] .cat-count{background:var(--violet);color:#fff}
-.strategy-goal{font-size:11.5px;color:var(--ink-2);padding:0 12px 8px;line-height:1.45}
+.catcard[data-cat="strategy"] .cat-title{font-size:13.5px}
+.catcard[data-cat="strategy"] .cat-count{background:var(--cc-strategy);color:#fff}
+.strategy-goal{font-size:12.5px;color:var(--ink-2);padding:0 12px 9px;line-height:1.5}
 .strategy-bar{padding:0 12px 11px;display:flex;align-items:center;gap:8px}
 .strategy-bar .progress{flex:1}
 .strategy-pct{font-size:12px;font-weight:800;color:var(--accent)}
 
 /* ---- Clinical toolbox ---- */
 .toolbox{
-  width:268px;flex:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  width:290px;flex:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
   box-shadow:var(--shadow);position:sticky;top:0;max-height:calc(100vh - 128px);display:flex;flex-direction:column;overflow:hidden;
   transition:width .3s cubic-bezier(.2,.9,.3,1);
 }
 .toolbox.collapsed{width:52px}
 .tb-head{display:flex;align-items:center;gap:8px;padding:13px 12px;border-bottom:1px solid var(--border);flex:none}
-.tb-head .ttl{font-size:13px;font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden}
+.tb-head .ttl{font-size:14px;font-weight:800;flex:1;min-width:0;white-space:nowrap;overflow:hidden}
 .toolbox.collapsed .tb-head{flex-direction:column;padding:12px 6px}
 .toolbox.collapsed .tb-body,.toolbox.collapsed .tb-search,.toolbox.collapsed .tb-head .ttl,.toolbox.collapsed .tb-hint{display:none}
 .tb-search{padding:10px 12px;border-bottom:1px solid var(--border);flex:none}
 .tb-search .searchbox{width:100%;margin:0;padding:7px 10px}
 .tb-body{overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:3px;flex:1}
 .tb-cat{border-radius:10px;overflow:hidden}
-.tb-cat-head{display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;border-radius:9px;text-align:start;font-size:12.5px;font-weight:700;transition:background .15s}
+.tb-cat-head{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:9px;text-align:start;font-size:13.5px;font-weight:700;transition:background .15s}
 .tb-cat-head:hover{background:var(--surface-2)}
 .tb-cat.open .tb-cat-head{background:var(--surface-2)}
 .tb-cat-ic{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--ccs);color:var(--cc)}
@@ -342,19 +357,25 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 .tb-items{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.2,.9,.3,1)}
 .tb-cat.open .tb-items{grid-template-rows:1fr}
 .tb-items>div{overflow:hidden}
-.tb-items ul{list-style:none;margin:0;padding:4px 4px 8px;display:flex;flex-direction:column;gap:4px}
+.tb-items ul{list-style:none;margin:0;padding:5px 4px 9px;display:flex;flex-direction:column;gap:6px}
 .tb-item{
-  display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:9px;background:var(--surface-2);
-  border:1px solid var(--border);font-size:11.5px;font-weight:600;cursor:grab;transition:all .16s cubic-bezier(.2,.9,.3,1.1);
+  display:flex;align-items:center;gap:8px;padding:9px 9px;border-radius:10px;background:var(--surface);
+  border:1px solid var(--border-2);font-size:12.5px;font-weight:600;cursor:grab;
+  box-shadow:var(--shadow-sm);transition:all .16s cubic-bezier(.2,.9,.3,1.1);
 }
-.tb-item:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.tb-item:hover{border-color:var(--cc);background:var(--ccs);transform:translateY(-1px);box-shadow:var(--shadow)}
 .tb-item:active{cursor:grabbing}
 .tb-item.drag{opacity:.35;transform:scale(.96) rotate(-1.5deg)}
 .tb-item .grip{color:var(--ink-faint);flex:none}
 .tb-item .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tb-item .add{opacity:0;flex:none;transition:opacity .15s;color:var(--accent)}
-.tb-item:hover .add{opacity:1}
-.tb-hint{padding:9px 12px;border-top:1px solid var(--border);font-size:10.5px;color:var(--ink-faint);line-height:1.45;flex:none}
+/* the quick-add affordance stays visible — a hover-only control is invisible
+   to an audience watching a demo, and to anyone not already on the row */
+.tb-item .add{
+  flex:none;width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border-2);background:var(--surface-2);color:var(--ink-dim);transition:all .15s;
+}
+.tb-item:hover .add,.tb-item .add:hover,.tb-item .add:focus-visible{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tb-hint{padding:10px 12px;border-top:1px solid var(--border);font-size:11.5px;color:var(--ink-dim);line-height:1.5;flex:none}
 
 @media(max-width:1240px){
   .canvas-layout{flex-direction:column}
@@ -541,24 +562,31 @@ function ic(name, size=18, cls=''){
    SHARED APPLICATION STATE  — one entity, referenced by every screen
    ========================================================================= */
 const uid=(()=>{let n=1;return()=>'e'+(n++)})();
+function escapeHtml(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+const BRAND_ICON="data:image/png;base64,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";
 const STATUS={urgent:'דחוף',warn:'ממתין',progress:'בביצוע',done:'הושלם'};
 const PRIORITY={urgent:'דחוף',high:'גבוה',normal:'רגיל',low:'נמוך'};
 
 /* 12 fixed canvas categories — the system controls the layout */
+/* each of the 12 categories carries its own hue so no two read alike on the
+   canvas; `s` is derived from `c` so light and dark both stay in step */
 const CATS={
-  strategy :{label:'אסטרטגיית טיפול', icon:'target',       c:'var(--violet)', s:'var(--violet-soft)'},
-  tests    :{label:'בדיקות',           icon:'flask',        c:'var(--accent)', s:'var(--accent-soft)'},
-  imaging  :{label:'הדמיה',            icon:'scan',         c:'var(--accent-2)', s:'var(--accent-soft)'},
-  treatments:{label:'טיפולים',         icon:'drop',         c:'var(--stable)', s:'var(--stable-soft)'},
-  meds     :{label:'תרופות',           icon:'pill',         c:'var(--warn)',   s:'var(--warn-soft)'},
-  consults :{label:'ייעוצים',          icon:'stethoscope',  c:'var(--violet)', s:'var(--violet-soft)'},
-  tasks    :{label:'משימות',           icon:'check',        c:'var(--accent)', s:'var(--accent-soft)'},
-  documents:{label:'מסמכים',           icon:'doc',          c:'var(--ink-dim)',s:'var(--surface-3)'},
-  family   :{label:'משפחה',            icon:'heart',        c:'var(--urgent)', s:'var(--urgent-soft)'},
-  discharge:{label:'שחרור',            icon:'exit',         c:'var(--stable)', s:'var(--stable-soft)'},
-  social   :{label:'נושאים סוציאליים', icon:'social',       c:'var(--ink-dim)',s:'var(--surface-3)'},
-  decisions:{label:'נקודות החלטה',     icon:'branch',       c:'var(--urgent)', s:'var(--urgent-soft)'},
+  strategy :{label:'אסטרטגיית טיפול', icon:'target',      c:'var(--cc-strategy)'},
+  tests    :{label:'בדיקות',           icon:'flask',       c:'var(--cc-tests)'},
+  imaging  :{label:'הדמיה',            icon:'scan',        c:'var(--cc-imaging)'},
+  treatments:{label:'טיפולים',         icon:'drop',        c:'var(--cc-treatments)'},
+  meds     :{label:'תרופות',           icon:'pill',        c:'var(--cc-meds)'},
+  consults :{label:'ייעוצים',          icon:'stethoscope', c:'var(--cc-consults)'},
+  tasks    :{label:'משימות',           icon:'check',       c:'var(--cc-tasks)'},
+  documents:{label:'מסמכים',           icon:'doc',         c:'var(--cc-documents)'},
+  family   :{label:'משפחה',            icon:'heart',       c:'var(--cc-family)'},
+  discharge:{label:'שחרור',            icon:'exit',        c:'var(--cc-discharge)'},
+  social   :{label:'נושאים סוציאליים', icon:'social',      c:'var(--cc-social)'},
+  decisions:{label:'נקודות החלטה',     icon:'branch',      c:'var(--cc-decisions)'},
 };
+Object.values(CATS).forEach(c=>{ c.s=`color-mix(in srgb, ${c.c} var(--cc-tint), var(--surface))`; });
 /* perimeter order of a 4x4 grid — hub sits in the middle 2x2 */
 const CAT_ORDER=['strategy','tests','imaging','consults','decisions','meds','discharge','treatments','family','tasks','documents','social'];
 
@@ -689,6 +717,9 @@ const catItems = (pid,cat) => DATA.items.filter(i=>i.p===pid && i.cat===cat);
 const openItems = pid => itemsOf(pid).filter(i=>i.st!=='done');
 const nowHM=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 const toMin=t=>{const[a,b]=t.split(':').map(Number);return a*60+b};
+/* the mock schedule clusters around the morning shift — pin the timeline's
+   "now" line to that window so it never lands far from the demo data */
+const DEMO_NOW_MIN=toMin('09:15');
 
 /* =========================================================================
    NAVIGATION
@@ -733,7 +764,7 @@ function repaintContent(){
 }
 function toast(msg,icon='check'){
   const r=document.getElementById('toast-root');
-  r.innerHTML=`<div class="toast-wrap"><div class="toast">${ic(icon,16)}<span>${msg}</span></div></div>`;
+  r.innerHTML=`<div class="toast-wrap"><div class="toast">${ic(icon,16)}<span>${escapeHtml(msg)}</span></div></div>`;
   clearTimeout(window.__t); window.__t=setTimeout(()=>r.innerHTML='',3000);
 }
 
@@ -742,7 +773,7 @@ function shell(){
   return `
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-mark">${ic('activity',20)}</div>
+      <div class="brand-mark">${BRAND_ICON?`<img src="${BRAND_ICON}" alt="">`:ic('activity',20)}</div>
       <div><div class="brand-name">RoboTask</div><div class="brand-sub">${nav.label}</div></div>
     </div>
     <div class="role-block">
@@ -1084,7 +1115,7 @@ function vTimeline(){
   const p=P_(state.pid);
   const days = state.tlRange==='day'?[TODAY] : state.tlRange==='3'?[TODAY,TODAY+1,TODAY+2] : [0,1,2,3,4,5,6];
   const items=itemsOf(p.id);
-  const nowTop=(new Date().getHours()*60+new Date().getMinutes())/60*ROW_H;
+  const nowTop=DEMO_NOW_MIN/60*ROW_H;
 
   const blockers=items.filter(i=>i.st!=='done'&&(i.cat==='decisions'||i.cat==='documents'||i.cat==='social'||i.pr==='urgent'));
   const recent=items.filter(i=>i.st==='done').slice(-4).reverse();
@@ -1128,7 +1159,8 @@ function vTimeline(){
         </div>
       </div>
       <div class="legend">
-        ${['imaging','tests','meds','treatments','consults','tasks','decisions','family','discharge'].map(k=>
+        ${/* only the categories this patient actually has on the board */''}
+        ${[...new Set(items.map(i=>i.cat))].map(k=>
           `<span><i style="background:${CATS[k].c}"></i>${CATS[k].label}</span>`).join('')}
         <span style="margin-inline-start:auto">${ic('link',12)} קו מקווקו = תלות בין פריטים</span>
       </div>
@@ -1372,7 +1404,7 @@ function vAI(){
   return `<div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 152px);overflow:hidden">
     <div class="tl-bar" style="border-bottom:1px solid var(--border)">${ic('sparkles',17)}<b style="font-size:14px">עוזר קליני RoboTask</b>
       <span class="pill info">מבוסס על נתוני המחלקה</span></div>
-    <div class="chatlog" id="chatlog">${state.chat.map(m=>`<div class="msg ${m.from==='bot'?'bot':'user'}">${m.text}</div>`).join('')}</div>
+    <div class="chatlog" id="chatlog">${state.chat.map(m=>`<div class="msg ${m.from==='bot'?'bot':'user'}">${escapeHtml(m.text)}</div>`).join('')}</div>
     <div class="chat-in"><input id="aiIn" placeholder="שאל על מטופל, בקש סיכום מצב או צור משימה…">
       <button class="btn primary" id="aiSend">${ic('arrow',15)} שלח</button></div>
   </div>`;
@@ -1635,7 +1667,7 @@ function openItemModal(id){
     <div class="kv"><span class="k">מועד</span><b class="mono">${DAYS[i.d]||''} ${i.time}</b></div>
     <div class="kv"><span class="k">משך משוער</span><b class="mono">${i.dur} דק׳</b></div>
     <div class="kv"><span class="k">תלוי ב־</span><b>${dep?dep.t:'—'}</b></div>
-    <div class="kv"><span class="k">הערות</span><b style="font-weight:600;color:var(--ink-2);text-align:end;max-width:60%">${i.note||'—'}</b></div>
+    <div class="kv"><span class="k">הערות</span><b style="font-weight:600;color:var(--ink-2);text-align:end;max-width:60%">${escapeHtml(i.note)||'—'}</b></div>
     <div class="field" style="margin-top:15px"><label>עדכון סטטוס</label>
       <select id="iSt">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}" ${i.st===k?'selected':''}>${v}</option>`).join('')}</select></div>
     <div class="row" style="gap:8px">
