@@ -422,7 +422,11 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 }
 .cat-item:not(:last-child){box-shadow:inset 0 -1px 0 var(--border)}
 .cat-item:hover{background:var(--surface-2)}
-.cat-item .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-item .ci-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;text-align:start}
+.cat-item .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-item .ci-meta{font-size:10.5px;color:var(--ink-faint);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-item.late{background:var(--urgent-soft)}
+.cat-item.late .ci-meta{color:var(--urgent)}
 .cat-item .stt{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;flex:none}
 .stt.done{color:var(--stable)} .stt.progress{color:var(--accent)}
 .stt.warn{color:var(--ink-faint)} .stt.urgent{color:var(--urgent)}
@@ -433,6 +437,13 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
 }
 .cat-foot:hover{background:color-mix(in srgb,var(--cc) var(--cc-tint),var(--surface));color:var(--cc)}
 .cat-empty{font-size:12px;color:var(--ink-faint);padding:8px 9px;line-height:1.45}
+/* A quiet way back into a category whose loop is already closed. */
+.cat-histhint{
+  display:flex;align-items:center;justify-content:center;gap:5px;width:100%;
+  padding:6px 8px;border-top:1px solid var(--border);background:var(--surface-2);
+  font-size:11px;font-weight:700;color:var(--ink-faint);transition:background .15s,color .15s;
+}
+.cat-histhint:hover{background:color-mix(in srgb,var(--cc) var(--cc-tint),var(--surface));color:var(--cc)}
 /* Treatment Strategy is the one card that keeps full colour weight — it
    answers "what are we trying to achieve", not just "what did we do". */
 .catcard[data-cat="strategy"]{
@@ -706,12 +717,12 @@ tr.rowbtn:hover{background:var(--surface-2);cursor:pointer}
    land on acknowledges it immediately; large surfaces move less than small
    controls so the room reads calm rather than springy. */
 .rail-item:active,.pcard:active,.prow:active,.room:active,.kcard:active,
-.cat-head:active,.cat-foot:active,.alertrow:active,.sched-i:active{transform:scale(.99)}
+.cat-head:active,.cat-foot:active,.cat-histhint:active,.alertrow:active,.sched-i:active{transform:scale(.99)}
 .iconbtn:active,.chip:active,.seg button:active,.subtab:active,
 .lg-role:active,.linkbtn:active,.switch:active,.cat-item:active,.tl-ev:active{transform:scale(.965)}
 .titem:active{transform:scale(.99)}
 .tick:active{transform:scale(.92)}
-.rail-item,.pcard,.prow,.room,.kcard,.cat-head,.cat-foot,.alertrow,.sched-i,
+.rail-item,.pcard,.prow,.room,.kcard,.cat-head,.cat-foot,.cat-histhint,.alertrow,.sched-i,
 .iconbtn,.chip,.seg button,.subtab,.lg-role,.linkbtn,.switch,.cat-item,.tl-ev,.tick{
   transition:transform var(--t-press) var(--ease),background .15s var(--ease),
              border-color .15s var(--ease),box-shadow .18s var(--ease),color .15s var(--ease);
@@ -743,7 +754,7 @@ h1,h2,h3,h4{letter-spacing:var(--track-title)}
   .modal{animation:fade .18s ease both !important}
   .toast{animation:fade .18s ease both !important}
   .rail-item:active,.pcard:active,.prow:active,.room:active,.kcard:active,
-  .cat-head:active,.cat-foot:active,.alertrow:active,.sched-i:active,
+  .cat-head:active,.cat-foot:active,.cat-histhint:active,.alertrow:active,.sched-i:active,
   .iconbtn:active,.chip:active,.seg button:active,.subtab:active,.lg-role:active,
   .linkbtn:active,.switch:active,.cat-item:active,.tl-ev:active,.titem:active,
   .tick:active,.btn:active,.lg-btn:active{transform:none}
@@ -963,6 +974,11 @@ const DATA={
     {id:uid(),p:'p1',cat:'decisions',t:'החלטה טיפולית',        st:'urgent',  pr:'urgent',who:'ד״ר כהן',   d:TODAY,time:'18:00',dur:30,dep:null,note:'המשך אשפוז מול שחרור'},
     {id:uid(),p:'p1',cat:'family',   t:'עדכון משפחה',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:TODAY,time:'19:30',dur:20,dep:null,note:'בת המשפחה: נועה'},
 
+    /* --- assigned tasks, carrying definer / performer / deadline --- */
+    {id:uid(),p:'p1',cat:'documents',t:'כתיבת סיכום ביניים',   st:'warn',    pr:'high',  who:'ליטל ברגר',by:'עו״ס רונית',due:{key:'hour',d:TODAY,time:'10:15',label:'השעה הקרובה'},d:TODAY,time:'10:15',dur:30,dep:null,note:'סיכום ביניים לקראת דיון',doneAt:null},
+    {id:uid(),p:'p1',cat:'treatments',t:'טיפול פיזיותרפיה',    st:'warn',    pr:'normal',who:'נעמי',      by:'ד״ר כהן',   due:{key:'noon',d:TODAY,time:'12:00',label:'עד 12:00'},  d:TODAY,time:'12:00',dur:40,dep:null,note:'לקראת גמילה מחמצן',doneAt:null},
+    {id:uid(),p:'p1',cat:'tests',    t:'סיקור סכנת נפילה',     st:'warn',    pr:'normal',who:'אחות מיכל',by:'אחמ״ש',    due:{key:'h24',d:TODAY,time:'08:00',label:'תוך 24 שעות מהקבלה'},d:TODAY,time:'08:00',dur:20,dep:null,note:'',doneAt:null},
+
     /* --- tomorrow: planned --- */
     {id:uid(),p:'p1',cat:'discharge',t:'סקירת שחרור',          st:'warn',    pr:'normal',who:'ד״ר כהן',   d:dayIdx(1),time:'09:00',dur:30,dep:null,note:'בהמתנה להחלטה טיפולית'},
     {id:uid(),p:'p1',cat:'meds',     t:'מעבר לטיפול אנטיביוטי פומי',st:'warn',pr:'high', who:'ד״ר כהן',   d:dayIdx(1),time:'10:00',dur:20,dep:null,note:'תנאי לשחרור'},
@@ -1049,11 +1065,137 @@ const TOOLBOX=[
   {key:'family',   items:['שיחת עדכון משפחה','פגישת משפחה','תיאום ביקור','שיחת החלטות טיפול']},
 ];
 
+/* =====================================================================
+   STAFF, DEADLINES AND THE TASK CATALOGUE
+   The department's tasks are a closed list, not free text. Picking from it
+   is what lets the app route a task to the right category, pre-fill who
+   normally defines and performs it, and know the window it must close in.
+   ===================================================================== */
+const STAFF=[
+  {n:'ד״ר כהן',    r:'רופא בכיר'},
+  {n:'ד״ר גולן',   r:'רופא בכיר'},
+  {n:'ד״ר לוי',    r:'רופא בכיר'},
+  {n:'אחמ״ש',      r:'אחראי משמרת'},
+  {n:'ליטל ברגר',  r:'מתמחה'},
+  {n:'רופא תורן',  r:'תורן'},
+  {n:'אחות דנה',   r:'אחות'},
+  {n:'אחות מיכל',  r:'אחות'},
+  {n:'נעמי',       r:'פיזיותרפיה'},
+  {n:'עו״ס רונית', r:'עבודה סוציאלית'},
+  {n:'דיאטנית',    r:'תזונה'},
+  {n:'מעבדה',      r:'מעבדה'},
+  {n:'רדיולוג',    r:'רדיולוגיה'},
+];
+const ME='ד״ר כהן';
+const STAFF_ROLE=n=>(STAFF.find(s=>s.n===n)||{}).r||'';
+
+/* A deadline is a window, not a point: "within the hour", "by noon",
+   "within 24h of admission". Each resolves to a day + clock time. */
+const DUE_PRESETS={
+  hour : {label:'השעה הקרובה',           mins:60},
+  h4   : {label:'תוך 4 שעות',             mins:240},
+  h8   : {label:'תוך 8 שעות מהקבלה',      mins:480},
+  h24  : {label:'תוך 24 שעות מהקבלה',     mins:1440},
+  noon : {label:'עד 12:00',               at:'12:00'},
+  shift: {label:'עד סוף המשמרת (15:00)',  at:'15:00'},
+  day  : {label:'עד סוף היום',            at:'23:00'},
+  week : {label:'תוך שבוע',               mins:10080},
+};
+/* resolve a preset into the day/time the item actually sits on */
+function resolveDue(key,fromD,fromMin){
+  const pr=DUE_PRESETS[key]; if(!pr)return null;
+  let d=fromD??TODAY, mins;
+  if(pr.at){ mins=toMin(pr.at); if(mins<=fromMin) d=Math.min(6,d+1); }
+  else { const tot=(fromMin??DEMO_NOW_MIN)+pr.mins; d=Math.min(6,d+Math.floor(tot/1440)); mins=tot%1440; }
+  return {key,d,time:hhmm(mins),label:pr.label};
+}
+/* a task is late once its window has passed and nobody has closed it */
+function isOverdue(i){
+  if(i.st==='done'||!i.due)return false;
+  return (i.due.d*1440+toMin(i.due.time)) < (TODAY*1440+DEMO_NOW_MIN);
+}
+
+/* The catalogue. `cat` is what routes it on the canvas, `by` and `to` are
+   who normally defines and performs it, `due` is the standard window. */
+const TASK_CATALOG=[
+  {g:'קבלה ואחריות', items:[
+    {t:'קבלת חולה למחלקה (רפואית/סיעודית)', cat:'tasks',     by:'אחמ״ש',      to:'ליטל ברגר', due:'h4'},
+    {t:'קביעת המנהל הרפואי של המקרה',        cat:'decisions', by:'אחמ״ש',      to:'ד״ר כהן',   due:'hour'},
+  ]},
+  {g:'ניטור ומשמרת', items:[
+    {t:'השגחה מיוחדת (חולה בסיכון)',          cat:'treatments',by:'ד״ר כהן',    to:'רופא תורן', due:'shift'},
+    {t:'בדיקת חולה לאחר פעולה פולשנית',       cat:'tasks',     by:'ד״ר כהן',    to:'רופא תורן', due:'h4'},
+    {t:'מעקב מדדים',                           cat:'treatments',by:'ד״ר כהן',    to:'אחות דנה',  due:'shift'},
+    {t:'ביקור רופאים',                         cat:'tasks',     by:'ד״ר כהן',    to:'ליטל ברגר', due:'noon'},
+  ]},
+  {g:'בדיקות והדמיה', items:[
+    {t:'הזמנת בדיקות מעבדה',                   cat:'tests',     by:'ליטל ברגר', to:'אחות דנה',  due:'h4'},
+    {t:'הזמנת בדיקת הדמיה',                    cat:'imaging',   by:'ד״ר כהן',    to:'ליטל ברגר', due:'h4'},
+    {t:'הכנה לבדיקה (צום / הכנה לפעולה)',      cat:'tests',     by:'ליטל ברגר', to:'אחות דנה',  due:'h8'},
+    {t:'בירור רגישות ליוד לפני CT',            cat:'imaging',   by:'ליטל ברגר', to:'אחות דנה',  due:'h4'},
+    {t:'פענוח רשמי של צילום חזה',              cat:'imaging',   by:'ד״ר כהן',    to:'רדיולוג',   due:'h24'},
+    {t:'מעקב אחר תוצאת מעבדה חריגה',           cat:'tests',     by:'ד״ר כהן',    to:'ליטל ברגר', due:'h4'},
+  ]},
+  {g:'ייעוצים ודיונים', items:[
+    {t:'הזמנת ייעוץ מומחה',                    cat:'consults',  by:'ד״ר כהן',    to:'ליטל ברגר', due:'h24'},
+    {t:'ייעוץ גריאטרי להערכה לסידור מוסדי',    cat:'consults',  by:'ד״ר כהן',    to:'עו״ס רונית',due:'h24'},
+    {t:'דיון מולטי-דיסציפלינרי',               cat:'decisions', by:'ד״ר כהן',    to:'ד״ר גולן',  due:'week'},
+    {t:'התייעצות ואישור עם בכיר',              cat:'decisions', by:'ליטל ברגר', to:'ד״ר כהן',   due:'h4'},
+  ]},
+  {g:'סיעוד ואומדנים', items:[
+    {t:'סיקור חיידקים עמידים — בקבלה',         cat:'tests',     by:'אחמ״ש',      to:'אחות דנה',  due:'h8'},
+    {t:'סיקור חיידקים עמידים — לאחר חשיפה',    cat:'tests',     by:'אחמ״ש',      to:'אחות דנה',  due:'h4'},
+    {t:'אומדן כאב',                             cat:'treatments',by:'אחמ״ש',      to:'אחות דנה',  due:'h8'},
+    {t:'אומדן נורטון',                          cat:'treatments',by:'אחמ״ש',      to:'אחות מיכל', due:'h8'},
+    {t:'אומדן עור',                             cat:'treatments',by:'אחמ״ש',      to:'אחות דנה',  due:'h8'},
+    {t:'אומדן תת-תזונה',                        cat:'treatments',by:'אחמ״ש',      to:'דיאטנית',   due:'h24'},
+    {t:'סיקור סכנת נפילה',                      cat:'treatments',by:'אחמ״ש',      to:'אחות מיכל', due:'h24'},
+  ]},
+  {g:'מקצועות הבריאות ושיקום', items:[
+    {t:'טיפול פיזיותרפיה',                      cat:'treatments',by:'ד״ר כהן',    to:'נעמי',      due:'noon'},
+    {t:'הוראה ל-TPN',                           cat:'meds',      by:'ד״ר כהן',    to:'דיאטנית',   due:'h8'},
+    {t:'הערכת מועמדות לשיקום',                  cat:'discharge', by:'ד״ר כהן',    to:'נעמי',      due:'h24'},
+  ]},
+  {g:'סוציאלי ואתיקה', items:[
+    {t:'שיחת עו״ס עם מטופל',                    cat:'social',    by:'ד״ר כהן',    to:'עו״ס רונית',due:'h24'},
+    {t:'טיפול בסידור מוסדי',                    cat:'social',    by:'ד״ר כהן',    to:'עו״ס רונית',due:'week'},
+    {t:'מיצוי זכויות',                          cat:'social',    by:'עו״ס רונית',to:'עו״ס רונית',due:'week'},
+    {t:'פנייה לוועדת אתיקה',                    cat:'decisions', by:'ד״ר כהן',    to:'ד״ר גולן',  due:'week'},
+  ]},
+  {g:'תקשורת עם מטופל ומשפחה', items:[
+    {t:'שיחה עם המטופל (בשורות קשות)',          cat:'family',    by:'ד״ר כהן',    to:'ד״ר כהן',   due:'day'},
+    {t:'שיחה עם משפחה',                         cat:'family',    by:'ד״ר כהן',    to:'ליטל ברגר', due:'day'},
+    {t:'עדכון משפחה במצב מיוחד',                cat:'family',    by:'ד״ר כהן',    to:'ד״ר כהן',   due:'h4'},
+  ]},
+  {g:'ניתוח', items:[
+    {t:'הכנת חולה לניתוח',                      cat:'treatments',by:'ד״ר כהן',    to:'אחות דנה',  due:'h8'},
+  ]},
+  {g:'שחרור', items:[
+    {t:'תכנון שחרור מראש',                      cat:'discharge', by:'ד״ר כהן',    to:'ליטל ברגר', due:'h24'},
+    {t:'כתיבת סיכום ביניים',                    cat:'documents', by:'עו״ס רונית',to:'ליטל ברגר', due:'hour'},
+    {t:'החלטה על שחרור',                        cat:'decisions', by:'ד״ר כהן',    to:'ד״ר כהן',   due:'noon'},
+    {t:'שחרור מחר (B8ED)',                      cat:'discharge', by:'ד״ר כהן',    to:'ליטל ברגר', due:'day'},
+    {t:'הכנת מכתב סיכום ל-B8ED',                cat:'documents', by:'ד״ר כהן',    to:'ליטל ברגר', due:'day'},
+    {t:'שחרור היום — כתיבת מכתב ושיחת סיכום',   cat:'discharge', by:'ד״ר כהן',    to:'ליטל ברגר', due:'shift'},
+    {t:'אישור בכיר למכתב השחרור',               cat:'documents', by:'ליטל ברגר', to:'ד״ר כהן',   due:'shift'},
+    {t:'קביעת תור למרפאות מומחים לאחר אשפוז',   cat:'discharge', by:'ד״ר כהן',    to:'עו״ס רונית',due:'week'},
+    {t:'הוצאת חולה מהיחידה',                    cat:'discharge', by:'אחמ״ש',      to:'אחות מיכל', due:'shift'},
+  ]},
+  {g:'תיעוד וחתימות', items:[
+    {t:'חתימה על מכתבי סיכום שלא נחתמו',        cat:'documents', by:'אחמ״ש',      to:'ד״ר כהן',   due:'week'},
+    {t:'כתיבת סיכום אשפוז במקרה של פטירה',      cat:'documents', by:'אחמ״ש',      to:'ד״ר כהן',   due:'week'},
+    {t:'חתימה על מכתב פטירה',                   cat:'documents', by:'אחמ״ש',      to:'ד״ר כהן',   due:'week'},
+  ]},
+];
+const CATALOG_FLAT=TASK_CATALOG.flatMap(g=>g.items.map(i=>({...i,g:g.g})));
+const catalogEntry=t=>CATALOG_FLAT.find(e=>e.t===t);
+
+
 const state={
   authed:false, loginRole:'physician',
   theme:'light', role:'physician', view:'home', pid:'p1',
   open:{strategy:true,tests:true,imaging:true,treatments:true,tasks:true},
-  tbOpen:{tests:true}, tbCollapsed:false, tbQuery:'',
+  tbOpen:{tests:true}, tbCollapsed:false, tbQuery:'', hist:{},
   search:'', plQuery:'', tlRange:'week', tlSel:null, drag:null,
   chat:[{from:'bot',text:'שלום ד״ר כהן. אני העוזר הקליני של RoboTask — אפשר לשאול על מטופל, לבקש סיכום מצב או ליצור משימה.'}],
 };
@@ -1062,7 +1204,11 @@ const P_=id=>DATA.patients.find(p=>p.id===id);
 const itemsOf=pid=>DATA.items.filter(i=>i.p===pid);
 const catItems=(pid,cat)=>DATA.items.filter(i=>i.p===pid&&i.cat===cat);
 const openItems=pid=>itemsOf(pid).filter(i=>i.st!=='done');
-const nowHM=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+/* The demo runs on its own clock, pinned to DEMO_NOW_MIN, so a task closed
+   during the presentation is stamped on the same "now" the timeline draws —
+   not on the wall clock of whatever hour the room happens to be sitting in. */
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const nowHM=()=>hhmm(DEMO_NOW_MIN);
 const toMin=t=>{const[a,b]=t.split(':').map(Number);return a*60+b};
 const isBlocked=i=>{if(!i.dep)return false;const d=DATA.items.find(x=>x.id===i.dep);return d&&d.st!=='done'};
 
@@ -1248,7 +1394,9 @@ function tbEnd(){
     <select class="role-select" id="roleSel" title="תפקיד פעיל">
       ${Object.entries(NAV).map(([k,v])=>`<option value="${k}" ${state.role===k?'selected':''}>${v.label}</option>`).join('')}
     </select>
-    <button class="iconbtn" id="bellBtn" title="התראות">${ic('bell',16)}<span class="badge">3</span></button>
+    <button class="iconbtn" id="bellBtn" title="התראות">${ic('bell',16)}${(()=>{
+      const n=DATA.items.filter(isOverdue).length+DATA.items.filter(i=>i.st==='done'&&i.doneAt&&i.by===ME&&i.who!==ME).length;
+      return n?`<span class="badge">${n}</span>`:'';})()}</button>
     <button class="iconbtn" data-nav="ai" title="עוזר AI">${ic('sparkles',16)}</button>
     <div class="me">
       ${portrait({id:'doc',hue:214,status:null},32)}
@@ -1538,14 +1686,21 @@ function hub(p){
 }
 
 function catCard(p,key){
-  const c=CATS[key], items=catItems(p.id,key), d=state.drag;
-  const hasUrgent=items.some(i=>i.st==='urgent');
+  const c=CATS[key], all=catItems(p.id,key), d=state.drag;
+  /* A completed task leaves the patient's open list for the history, so the
+     card counts and shows only what is still outstanding. */
+  const done=all.filter(i=>i.st==='done'), open=all.filter(i=>i.st!=='done');
+  /* History is opt-in: a task that closed its loop must not reappear beside
+     the patient's name on its own, however empty the category is left. */
+  const showHist=!!state.hist[key];
+  const items=showHist?done:open;
+  const hasUrgent=open.some(i=>i.st==='urgent'||isOverdue(i));
   /* Progressive disclosure: an explicit toggle wins; otherwise a category
      opens itself only when it holds something urgent for this patient. */
   const isOpen = key in state.open ? !!state.open[key] : hasUrgent;
   const cls=['catcard',isOpen?'open':'',d?(d.cat===key?'dropok':'dimmed'):''].join(' ');
-  const cnt=key==='strategy'?p.progress+'%':items.length;
-  const openN=items.filter(i=>i.st!=='done').length;
+  const cnt=key==='strategy'?p.progress+'%':open.length;
+  const openN=open.length;
 
   /* Strategy always shows its goal and progress — those are the card's whole
      point; only the sub-goals hide behind the expand, keeping it compact. */
@@ -1557,11 +1712,20 @@ function catCard(p,key){
     body=`<div class="cat-list">${p.subgoals.map((s,i)=>`<div class="cat-item"><span class="t">${esc(s)}</span>
         <span class="stt ${i<doneN?'done':'warn'}">${i<doneN?'בוצע':'מתוכנן'}${ic(i<doneN?'check2':'clock',12)}</span></div>`).join('')}</div>`;
   } else {
-    body=`<div class="cat-list">${items.length?items.map(i=>`
-      <button class="cat-item" data-openitem="${i.id}">
-        <span class="t">${esc(i.t)}</span>
-        <span class="stt ${i.st}">${STATUS[i.st]}${ic(i.st==='done'?'check2':i.st==='progress'?'activity':i.st==='urgent'?'alert':'clock',12)}</span>
-      </button>`).join(''):`<div class="cat-empty">גררו פעולה מארגז הכלים אל הקטגוריה</div>`}</div>`;
+    body=`<div class="cat-list">${items.length?items.map(i=>{
+      const late=isOverdue(i);
+      return `<button class="cat-item ${late?'late':''}" data-openitem="${i.id}">
+        <span class="ci-main">
+          <span class="t">${esc(i.t)}</span>
+          <span class="ci-meta">${i.who?esc(i.who):''}${i.due?` · ${late?'באיחור מ-':'עד '}${i.due.time}`:''}${
+            i.st==='done'&&i.doneAt?` · בוצע ${i.doneAt.time}`:''}</span>
+        </span>
+        <span class="stt ${late?'urgent':i.st}">${late?'באיחור':STATUS[i.st]}${
+          ic(late?'alert':i.st==='done'?'check2':i.st==='progress'?'activity':i.st==='urgent'?'alert':'clock',12)}</span>
+      </button>`}).join('')
+      :`<div class="cat-empty">${showHist?'אין משימות בהיסטוריה'
+        :done.length?`כל המשימות בקטגוריה בוצעו · ${done.length} בהיסטוריה`
+        :'גררו פעולה מארגז הכלים אל הקטגוריה'}</div>`}</div>`;
   }
 
   return `<div class="${cls}" data-cat="${key}" style="--cc:${c.c}">
@@ -1573,9 +1737,15 @@ function catCard(p,key){
       <span class="cat-count">${cnt}</span>
       <span class="cat-chev">${ic('chevron',14)}</span>
     </button>
+    ${/* Nothing outstanding but a closed loop behind it: say so on the collapsed
+         card and keep the way into the history one click away. */''}
+    ${!isOpen&&key!=='strategy'&&!openN&&done.length
+      ?`<button class="cat-histhint" data-hist="${key}">${ic('clock',12)} ${done.length} בהיסטוריה</button>`:''}
     ${always}
     <div class="cat-body"><div class="cat-body-inner">
       ${body}
+      ${key!=='strategy'&&done.length?`<button class="cat-foot" data-hist="${key}">${
+        ic(showHist?'arrow':'clock',13)} ${showHist?'חזרה למשימות הפתוחות':`היסטוריית משימות (${done.length})`}</button>`:''}
       <button class="cat-foot" data-catall="${key}">${ic('chevR',13)} ${c.all}</button>
     </div></div>
   </div>`;
@@ -1823,17 +1993,22 @@ function drawDeps(){
    SECONDARY SCREENS
    ===================================================================== */
 function vTasks(){
-  const tasks=DATA.items.filter(i=>['tasks','decisions','discharge','consults'].includes(i.cat));
+  /* an assigned task is one with a definer and a window, whatever clinical
+     category it was routed to; the older category-based items stay listed */
+  const tasks=DATA.items.filter(i=>(i.by&&i.due)||['tasks','decisions','discharge','consults'].includes(i.cat));
   return `${subtabs('tasks')}
   <div class="card" style="overflow:hidden"><table>
-    <thead><tr><th></th><th>משימה</th><th>מטופל</th><th>קטגוריה</th><th>אחראי</th><th>מועד</th><th>עדיפות</th><th>סטטוס</th></tr></thead>
-    <tbody>${tasks.map(i=>{const p=P_(i.p);return `<tr>
+    <thead><tr><th></th><th>משימה</th><th>מטופל</th><th>מגדיר</th><th>היעד</th><th>זמן לביצוע</th><th>עדיפות</th><th>סטטוס</th></tr></thead>
+    <tbody>${tasks.map(i=>{const p=P_(i.p),late=isOverdue(i);return `<tr ${late?'style="background:var(--urgent-soft)"':''}>
       <td style="width:34px"><button class="tick ${i.st==='done'?'on':''}" data-toggle="${i.id}">${ic('check2',11)}</button></td>
-      <td style="font-weight:700">${esc(i.t)}</td><td>${esc(p.name)}</td>
-      <td><span class="row" style="gap:6px;--cc:${CATS[i.cat].c}"><span style="color:var(--cc)">${ic(CATS[i.cat].icon,13)}</span>${CATS[i.cat].label}</span></td>
-      <td>${esc(i.who)}</td><td class="mono">${i.time}</td>
+      <td style="font-weight:700">${esc(i.t)}
+        <span class="hint" style="display:block;font-size:10.5px">${CATS[i.cat].label}</span></td>
+      <td>${esc(p.name)}</td>
+      <td>${esc(i.by||'—')}</td>
+      <td style="font-weight:700">${esc(i.who)}</td>
+      <td>${i.due?`${esc(i.due.label)}<span class="hint mono" style="display:block;font-size:10.5px">${DAY_LABEL(i.due.d)} ${i.due.time}</span>`:`<span class="mono">${i.time}</span>`}</td>
       <td><span class="pill ${i.pr==='urgent'?'urgent':i.pr==='high'?'warn':'ghost'}">${PRIORITY[i.pr]}</span></td>
-      <td>${pillFor(i.st)}</td></tr>`}).join('')}</tbody></table></div>`;
+      <td>${late?'<span class="pill urgent"><span class="dot"></span>באיחור</span>':pillFor(i.st)}</td></tr>`}).join('')}</tbody></table></div>`;
 }
 function vTable(){
   const q=state.search.trim();
@@ -2031,7 +2206,25 @@ function bind(){
   on('[data-nav]','click',e=>{state.view=e.currentTarget.dataset.nav;render()});
   on('[data-open]','click',e=>{state.pid=e.currentTarget.dataset.open;state.view='canvas';render()});
   A.querySelector('#railOut')?.addEventListener('click',logout);
-  A.querySelector('#bellBtn')?.addEventListener('click',()=>toast('3 התראות: תוצאת CT ממתינה, ייעוץ קרדיולוגיה פתוח, סקירת שחרור','bell'));
+  /* Two kinds of alert, and they go to two different people: an overdue task
+     alerts whoever has to perform it, a completed one alerts whoever defined
+     it. The bell names the task so the loop is legible, not just counted. */
+  A.querySelector('#bellBtn')?.addEventListener('click',()=>{
+    const late=DATA.items.filter(isOverdue);
+    const lateMine=late.filter(i=>i.who===ME), lateDept=late.filter(i=>i.who!==ME);
+    const closed=DATA.items.filter(i=>i.st==='done'&&i.doneAt&&i.by===ME&&i.who!==ME);
+    const parts=[];
+    if(lateMine.length) parts.push(
+      `באיחור אצלך: ״${lateMine[0].t}״${lateMine.length>1?` ועוד ${lateMine.length-1}`:''}`);
+    if(lateDept.length) parts.push(
+      `באיחור אצל ${lateDept[0].who}: ״${lateDept[0].t}״${lateDept.length>1?` ועוד ${lateDept.length-1}`:''}`);
+    if(closed.length) parts.push(closed.length===1
+      ? `״${closed[0].t}״ בוצעה ע״י ${closed[0].who}`
+      : `${closed.length} משימות שהגדרת בוצעו`);
+    toast(parts.length?parts.join(' · '):'אין התראות פתוחות',
+      late.length?'alert':closed.length?'check2':'bell');
+  });
+  A.querySelector('#bellBtnLegacy')?.addEventListener('click',()=>toast('3 התראות: תוצאת CT ממתינה, ייעוץ קרדיולוגיה פתוח, סקירת שחרור','bell'));
   A.querySelector('[data-newaction]')?.addEventListener('click',()=>{
     state.view='canvas'; state.tbCollapsed=false; render();
     toast('בחרו פעולה מארגז הכלים וגררו אותה אל הקטגוריה המתאימה','hand');
@@ -2051,6 +2244,8 @@ function bind(){
     const n=document.getElementById('tbxSearch');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}})}
 
   on('[data-toggle-cat]','click',e=>{const k=e.currentTarget.dataset.toggleCat;state.open[k]=!state.open[k];repaint()});
+  on('[data-hist]','click',e=>{e.stopPropagation();const k=e.currentTarget.dataset.hist;
+    state.hist[k]=!state.hist[k];state.open[k]=true;repaint()});
   on('[data-catall]','click',e=>{
     const k=e.currentTarget.dataset.catall;
     if(k==='strategy'){state.open.strategy=true;repaint();toast('אסטרטגיית הטיפול נפתחה')}
@@ -2103,9 +2298,7 @@ function bind(){
   on('[data-openitem]','click',e=>{e.stopPropagation();openItem(e.currentTarget.dataset.openitem)});
   on('[data-toggle]','click',e=>{e.stopPropagation();
     const i=DATA.items.find(x=>x.id===e.currentTarget.dataset.toggle);
-    i.st=i.st==='done'?'warn':'done';
-    toast(i.st==='done'?`״${i.t}״ סומן כבוצע — עודכן בכל המסכים`:`״${i.t}״ הוחזר לפתוח`);
-    render();
+    completeItem(i);
   });
 
   on('[data-range]','click',e=>{state.tlRange=e.currentTarget.dataset.range;repaint()});
@@ -2168,6 +2361,22 @@ function clearTargets(){
 /* =====================================================================
    MODALS
    ===================================================================== */
+/* Closing the loop: the performer marks it done, the definer is told, and
+   the task leaves the patient's open list for the history. */
+function completeItem(i){
+  if(i.st==='done'){
+    i.st='warn'; i.doneAt=null;
+    toast(`״${i.t}״ הוחזרה למשימות הפתוחות`);
+  } else {
+    i.st='done'; i.doneAt={d:TODAY,time:nowHM()};
+    const by=i.by||ME, who=i.who;
+    toast(by===who
+      ? `״${i.t}״ בוצעה · עברה להיסטוריית המשימות`
+      : `״${i.t}״ בוצעה ע״י ${who} · נשלחה הודעה ל${by} · עברה להיסטוריה`);
+  }
+  render();
+}
+
 function closeModal(){document.getElementById('modal-root').innerHTML=''}
 /* §7 spatial consistency: a sheet should emerge from what opened it, so the
    panel scales out of the last thing the user touched rather than the middle
@@ -2194,49 +2403,122 @@ function modalShell(title,icon,body,col){
   document.querySelector('.modal input,.modal select,.modal textarea')?.focus();
 }
 function openSchedule(title,cat,droppedOn,routed){
-  const p=P_(state.pid), c=CATS[cat];
+  const p=P_(state.pid);
+  /* A catalogue task carries its own routing and defaults, so picking one
+     can correct the category the item was dropped on. */
+  const seed=catalogEntry(title);
+  const start={t:title, cat:seed?seed.cat:cat, by:seed?seed.by:ME,
+               to:seed?seed.to:'ליטל ברגר', due:seed?seed.due:'h4'};
   const deps=itemsOf(p.id).filter(i=>i.st!=='done');
-  modalShell('הוספת פעולה קלינית',c.icon,`
+  const inCatalog=!!seed;
+
+  const staffOpts=(sel)=>STAFF.map(x=>
+    `<option value="${esc(x.n)}" ${x.n===sel?'selected':''}>${esc(x.n)} · ${esc(x.r)}</option>`).join('');
+
+  modalShell('הגדרת משימה',CATS[start.cat].icon,`
     ${routed?`<div class="pill warn" style="margin-bottom:11px;display:flex"><span class="dot"></span>
-      שוחרר על ״${CATS[droppedOn].label}״ — נותב אוטומטית ל״${c.label}״ לפי סוג הפעולה</div>`:''}
-    <div class="row" style="gap:10px;padding:10px 11px;background:color-mix(in srgb,${c.c} var(--cc-tint),var(--surface));
-         border:1px solid color-mix(in srgb,${c.c} 30%,var(--border));border-radius:11px;margin-bottom:14px">
-      <span style="width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;
-        background:var(--surface);color:${c.c};flex:none">${ic(c.icon,16)}</span>
-      <div><div style="font-weight:800;font-size:14px">${esc(title)}</div>
-        <div class="hint" style="font-size:11px">${c.label} · ${esc(p.name)} · חדר ${p.room}</div></div>
+      שוחרר על ״${CATS[droppedOn].label}״ — נותב אוטומטית לפי סוג המשימה</div>`:''}
+
+    <div class="field"><label>המשימה</label>
+      <select id="fTask">
+        ${inCatalog?'':`<option value="${esc(title)}" selected>${esc(title)}</option>`}
+        ${TASK_CATALOG.map(g=>`<optgroup label="${esc(g.g)}">${g.items.map(i=>
+          `<option value="${esc(i.t)}" ${i.t===title?'selected':''}>${esc(i.t)}</option>`).join('')}</optgroup>`).join('')}
+      </select>
     </div>
+
+    <div id="fRoute" class="row" style="gap:8px;margin:-4px 0 12px"></div>
+
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 11px">
+      <div class="field"><label>מגדיר המשימה</label>
+        <select id="fBy">${staffOpts(start.by)}</select></div>
+      <div class="field"><label>היעד — מבצע המשימה</label>
+        <select id="fWho">${staffOpts(start.to)}</select></div>
+    </div>
+
+    <div class="field"><label>הגדרת זמן לביצוע</label>
+      <select id="fDue">
+        ${Object.entries(DUE_PRESETS).map(([k,v])=>
+          `<option value="${k}" ${k===start.due?'selected':''}>${v.label}</option>`).join('')}
+        <option value="custom">מועד מותאם…</option>
+      </select>
+      <div id="fDueOut" class="hint" style="margin-top:5px"></div>
+    </div>
+
+    <div id="fCustom" style="display:none;grid-template-columns:1fr 1fr;gap:0 11px">
       <div class="field"><label>תאריך</label><select id="fDay">
         ${DAYS.map((d,i)=>`<option value="${i}" ${i===TODAY?'selected':''}>${DAY_LABEL(i)} · ${DATES[i]}</option>`).join('')}</select></div>
       <div class="field"><label>שעה</label><input id="fTime" type="time" value="${nowHM()}"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 11px">
       <div class="field"><label>דחיפות</label><select id="fPr">
         ${Object.entries(PRIORITY).map(([k,v])=>`<option value="${k}" ${k==='normal'?'selected':''}>${v}</option>`).join('')}</select></div>
-      <div class="field"><label>אחראי</label><select id="fWho">
-        <option>ד״ר כהן</option><option>ד״ר גולן</option><option>ד״ר לוי</option><option>אחות דנה</option>
-        <option>אחות מיכל</option><option>מעבדה</option><option>עו״ס רונית</option><option>פיזיותרפיה</option></select></div>
+      <div class="field"><label>תלות (יתחיל רק לאחר)</label><select id="fDep">
+        <option value="">ללא תלות</option>
+        ${deps.map(i=>`<option value="${i.id}">${esc(i.t)} · ${i.time}</option>`).join('')}</select></div>
     </div>
-    <div class="field"><label>תלות (יתחיל רק לאחר)</label><select id="fDep">
-      <option value="">ללא תלות</option>
-      ${deps.map(i=>`<option value="${i.id}">${esc(i.t)} · ${i.time}</option>`).join('')}</select></div>
+
     <div class="field"><label>הערות קליניות</label><textarea id="fNote" placeholder="הערה לצוות…"></textarea></div>
-    <button class="btn primary block" id="fSave">${ic('plus',15)} הוסף לקנבס המטופל</button>
-    <p class="hint" style="margin:9px 0 0;text-align:center;font-size:11px">
-      הפעולה תופיע מיד בקנבס, בציר הזמן, במשימות, בטבלה ובדשבורד המנהל</p>
-  `,c.c);
-  document.getElementById('fSave').addEventListener('click',()=>{
-    const pr=document.getElementById('fPr').value;
-    DATA.items.push({id:uid(),p:state.pid,cat,t:title,
-      st:pr==='urgent'?'urgent':'warn',pr,
-      who:document.getElementById('fWho').value,
-      d:+document.getElementById('fDay').value,
-      time:document.getElementById('fTime').value||nowHM(),
-      dur:30,dep:document.getElementById('fDep').value||null,
-      note:document.getElementById('fNote').value.trim()});
-    state.open[cat]=true; closeModal(); render();
-    const card=document.querySelector(`.catcard[data-cat="${cat}"]`);
+    <button class="btn primary block" id="fSave">${ic('plus',15)} הקצה משימה</button>
+    <p class="hint" id="fLoop" style="margin:9px 0 0;text-align:center;font-size:11px"></p>
+  `,CATS[start.cat].c);
+
+  const $=id=>document.getElementById(id);
+  /* keep routing, the resolved deadline and the loop sentence in step with
+     whatever the user has picked */
+  const sync=()=>{
+    const e=catalogEntry($('fTask').value);
+    const curCat=e?e.cat:cat, c=CATS[curCat];
+    $('fRoute').innerHTML=
+      `<span class="pill" style="background:color-mix(in srgb,${c.c} var(--cc-tint),var(--surface));
+        color:${c.c};border-color:color-mix(in srgb,${c.c} 34%,var(--border))">${ic(c.icon,12)} ${c.label}</span>
+       <span class="hint">${esc(p.name)} · חדר ${p.room}</span>`;
+    const custom=$('fDue').value==='custom';
+    $('fCustom').style.display=custom?'grid':'none';
+    const due=custom?null:resolveDue($('fDue').value,TODAY,DEMO_NOW_MIN);
+    $('fDueOut').innerHTML=due
+      ? `${ic('clock',12)} יעד לסיום: <b>${DAY_LABEL(due.d)} · ${due.time}</b>`
+      : 'בחרו תאריך ושעה';
+    $('fLoop').textContent=
+      `${$('fWho').value} יראה את המשימה אצלו ובתיק ${p.name}. עם הסימון כבוצעה — ${$('fBy').value} יקבל הודעה והמשימה תעבור להיסטוריה.`;
+  };
+  /* choosing a task adopts its catalogue defaults; editing any other field
+     just refreshes the readout, so a manual choice is never overwritten */
+  $('fTask').addEventListener('change',()=>{
+    const e=catalogEntry($('fTask').value);
+    if(e){$('fBy').value=e.by; $('fWho').value=e.to; $('fDue').value=e.due;}
+    sync();
+  });
+  ['fDue','fBy','fWho'].forEach(id=>$(id).addEventListener('change',sync));
+  sync();
+
+  $('fSave').addEventListener('click',()=>{
+    const t=$('fTask').value, e=catalogEntry(t);
+    const finalCat=e?e.cat:cat;
+    const custom=$('fDue').value==='custom';
+    const due=custom
+      ? {key:'custom',d:+$('fDay').value,time:$('fTime').value||nowHM(),label:'מועד מותאם'}
+      : resolveDue($('fDue').value,TODAY,DEMO_NOW_MIN);
+    const pr=$('fPr').value;
+    /* read every field BEFORE the modal is torn down — closeModal() removes
+       these nodes, so nothing below may touch the form again */
+    const by=$('fBy').value, who=$('fWho').value;
+    DATA.items.push({
+      id:uid(), p:state.pid, cat:finalCat, t,
+      st:pr==='urgent'?'urgent':'warn', pr,
+      by,                         /* מגדיר המשימה */
+      who,                        /* היעד — מבצע המשימה */
+      due,                        /* הגדרת הזמן לביצוע */
+      d:due.d, time:due.time, dur:30,
+      dep:$('fDep').value||null,
+      note:$('fNote').value.trim(),
+      doneAt:null,
+    });
+    state.open[finalCat]=true; closeModal(); render();
+    const card=document.querySelector(`.catcard[data-cat="${finalCat}"]`);
     if(card){card.classList.add('flash');card.scrollIntoView({block:'nearest',behavior:'smooth'})}
-    toast(`״${title}״ נוסף ל${CATS[cat].label} — מסונכרן בכל המסכים`);
+    toast(`״${t}״ הוקצתה ל${who} · יעד ${due.label}`);
   });
 }
 function openItem(id){
@@ -2247,10 +2529,17 @@ function openItem(id){
       <span class="pill" style="background:color-mix(in srgb,${c.c} var(--cc-tint),var(--surface));color:${c.c};border-color:color-mix(in srgb,${c.c} 34%,var(--border))">${ic(c.icon,12)} ${c.label}</span>
       ${pillFor(i.st)}<span class="pill ${i.pr==='urgent'?'urgent':i.pr==='high'?'warn':'ghost'}">דחיפות ${PRIORITY[i.pr]}</span>
       ${isBlocked(i)?'<span class="pill warn"><span class="dot"></span>חסום בהמתנה לתלות</span>':''}
+      ${isOverdue(i)?'<span class="pill urgent"><span class="dot"></span>חרג מהזמן שהוגדר</span>':''}
     </div>
     <div class="kv"><span class="k">מטופל</span><b>${esc(p.name)} · חדר ${p.room}</b></div>
-    <div class="kv"><span class="k">אחראי</span><b>${esc(i.who)}</b></div>
-    <div class="kv"><span class="k">מועד</span><b class="mono">${DAYS[i.d]||''} ${DATES[i.d]||''} · ${i.time}</b></div>
+    <div class="kv"><span class="k">מגדיר המשימה</span><b>${esc(i.by||'—')}${
+      i.by?` <span class="hint">· ${esc(STAFF_ROLE(i.by))}</span>`:''}</b></div>
+    <div class="kv"><span class="k">היעד — מבצע המשימה</span><b>${esc(i.who)}${
+      i.who?` <span class="hint">· ${esc(STAFF_ROLE(i.who))}</span>`:''}</b></div>
+    <div class="kv"><span class="k">זמן לביצוע</span><b>${
+      i.due?`${esc(i.due.label)} <span class="mono hint">· ${DAY_LABEL(i.due.d)} ${i.due.time}</span>`:'—'}</b></div>
+    ${i.doneAt?`<div class="kv"><span class="k">בוצעה</span><b class="mono" style="color:var(--stable)">${DAY_LABEL(i.doneAt.d)} ${i.doneAt.time}</b></div>`:''}
+    <div class="kv"><span class="k">מועד בלוח</span><b class="mono">${DAYS[i.d]||''} ${DATES[i.d]||''} · ${i.time}</b></div>
     <div class="kv"><span class="k">משך משוער</span><b class="mono">${i.dur} דק׳</b></div>
     <div class="kv"><span class="k">תלוי ב־</span><b>${dep?esc(dep.t):'—'}</b></div>
     <div class="kv"><span class="k">הערות</span><b style="font-weight:600;color:var(--ink-2);text-align:end;max-width:58%">${esc(i.note)||'—'}</b></div>
@@ -2261,7 +2550,12 @@ function openItem(id){
       <button class="btn" id="iTl">${ic('calendar',15)} הצג בציר הזמן</button>
     </div>`,c.c);
   document.getElementById('iSave').addEventListener('click',()=>{
-    i.st=document.getElementById('iSt').value; closeModal(); render();
+    const next=document.getElementById('iSt').value;
+    closeModal();
+    /* reuse the loop so a completion from here notifies the definer too */
+    if(next==='done'&&i.st!=='done'){completeItem(i);return}
+    if(next!=='done'&&i.st==='done'){completeItem(i);return}
+    i.st=next; render();
     toast(`״${i.t}״ עודכן ל־${STATUS[i.st]} — מסונכרן בכל המסכים`);
   });
   document.getElementById('iTl').addEventListener('click',()=>{

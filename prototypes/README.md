@@ -37,6 +37,30 @@ turns that category's connector blue, then opens a scheduling popover
 wrong category auto-routes to the correct one and says so. Every toolbox item
 also has a click-to-add button for accessibility.
 
+### The task catalogue and the closed loop
+
+Department tasks are a **closed list**, not free text (`TASK_CATALOG`: 11 groups,
+46 tasks). Picking a task from it is what lets the app route the work rather than
+just record it — each catalogue entry carries the category it belongs to, who
+normally defines it, who normally performs it, and the window it must close in.
+Drop an action on the wrong category and the form re-routes it and says so.
+
+A task definition therefore has four fields:
+
+| Field | Meaning |
+| --- | --- |
+| מגדיר המשימה | who assigned it |
+| המשימה | chosen from the catalogue |
+| היעד | who performs it |
+| הגדרת הזמן לביצוע | the window (`DUE_PRESETS`), resolved to a day + clock time |
+
+**The loop closes in one direction.** The target sees the task in their own list
+and in the patient's file. When they mark it done, the definer is notified, the
+task moves from open to task history, and it stops appearing beside the
+patient's name — history is opt-in, so a closed loop never re-surfaces on its
+own. Past its window and still open, the task alerts the person who has to
+perform it.
+
 ### Visual language
 
 Derived from the approved references in `design/references/`: warm ivory ground
